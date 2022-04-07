@@ -36,6 +36,7 @@ and shoves them onto relevant discussion thread.
 
 - Python 3.8
 - Discord.py
+- PyGithub
 
 ## Setup:
 
