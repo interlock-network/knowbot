@@ -15,9 +15,7 @@ import command
 # include others
 import os
 import discord
-import requests
 from dotenv import load_dotenv
-from github import Github
 
 # load environment variables
 load_dotenv()
