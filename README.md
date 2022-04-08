@@ -1,3 +1,7 @@
+### NOTE
+
+For dev purposes, I am running this bot through the github api with a personal access token from my account. You are welcome to do so for tinkering/testing, OR, replace the .env variable `GITHUB_TOKEN` in the .env folder with a Github access token of your own. My token will only permit access to public repos on Github.
+
 # Knowledgebase Bot (kb-bot)
 
 This repository contains code for the Interlock knowledgebase Discord bot. The concept was spawned from the interlock-kb [issue #46](https://github.com/interlock-network/interlock-kb/issues/46). So far, the intended design includes the following aspects:
