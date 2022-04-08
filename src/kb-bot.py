@@ -25,28 +25,64 @@ client = discord.Client()
 # scope restricted to only access public repo info
 g = Github('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')
 
-kb = g.get_repo('blairmunroakusa/portfolio')
+repo = 'blairmunroakusa/portfolio'
+repofull = 'https://github.com/' + repo
+kb = g.get_repo(repo)
 
-# interlock = Github().get_user('interlock-network')
+def chunkstring(string, length):
+    return (string[i:(length + i)] for i in range(0, len(string), length))
 
-class Content:
-    def __init__(self, content):
-        self.content = content
+# bash-style cat command
+async def cat(message):
+    # get file contents and return error if no file or directory exists
+    try:
+        kbdata = kb.get_contents(message.content.strip('kb-cat '))
+    except:
+        await message.reply('cat: *' +
+            message.content.replace('kb-cat ', '') +
+            '*: no such markdown/text file or directory.')
+        return
+    # decode file contents and return error if input is actually directory
+    try:
+        content = kbdata.decoded_content
+    except:
+        await message.reply('cat: *' +
+            message.content.replace('kb-cat ', '') +
+            '*: is a directory.')
+        return
+    # parse decoded content and condition for chat output
+    content = content.splitlines()
+    content = '\n'.join(str(x).strip('b\'') for x in content)
+    content = content.replace('](.', '](' + repofull + '/tree/master')
+    content = content.replace('](', '](<')
+    # break content into permittable chunks and reply in chat
+    for string in chunkstring(content, 2000): # max message reply string length is 2000 char
+        await message.reply(string)
+    return
 
-    def __repr__(self):
-        return fr'{self.content}'
+# help man page
+async def cat_help(message):
+    output = """
+KB-CAT      General Commands Manual
 
-def print_content(arg):
-    kbdata = kb.get_contents('README.md')
-    # kbdata = interlock.get_repos()
-    # kbdata = requests.get('https://api.github.com/users/interlock-network').json()
-    # content = Content(kbdata.decoded_content)
-    test = 'testee1\n' + 'testee2\n'
-    test2 = kbdata.decoded_content
-    return f"""{arg} {kbdata.html_url}
-{test2}
+NAME
+    kb-cat - contatenate and print files
+
+SYNOPSIS
+    kb-cat [--help] [file]
+
+DESCRIPTION
+    The cat utility reads text or markdown files, writing them to chat. Replies are broken into 2000 character chunks, and this might interfere with markdown formatting, or it might cause a line to be broken in an awkward place. Relative markdown links have been replaced by the absolute url. To prevent previews for all links in chat, the '<' is prepended to each address.
+
+EXAMPLE
+    The command:
+
+        kb-cat file1.md
+
+    will print the contents of file1.md to chat.
 """
-    # return print(f'testee\n' f'testtwo')
+    await message.reply(output)
+    return
 
 # connect kb-bot
 @client.event
@@ -57,10 +93,17 @@ async def on_ready():
         f'{server.name}(id: {server.id})'
     )
 
+# listen for messages
 @client.event
 async def on_message(message):
-    """Invoke when a message is received on the server."""
-    if (message.content == 'test'):
-        await message.reply(print_content(message.content))
 
+    # check for cat command to print file
+    if (message.content == 'kb-cat' or
+        message.content == 'kb-cat ' or
+        message.content == 'kb-cat --help'):
+        await cat_help(message)
+    elif (message.content.startswith('kb-cat ')):
+        await cat(message)
+
+# main
 client.run(TOKEN)
