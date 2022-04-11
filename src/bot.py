@@ -60,8 +60,25 @@ async def on_message(message):
     elif (message.content.startswith('kb ls help ')):
         await command.ls_help(message)
     # command exec
-    elif (message.content.startswith('kb ls ')):
+    elif (message.content.startswith('kb ls ') and
+        not message.content.__contains__(' | grep ')):
         await command.ls(message)
 
+    # check for ls command to grep directory contents list
+    # pipe grep directories ls
+    head, sep, tail = message.content.partition('kb ls ')
+    head, sep, tail = tail.partition(' | grep ')
+    if (message.content.__contains__('kb ls ') and
+        message.content.__contains__(' | grep ')):
+        await command.ls_pipe_grep(message)
+    # manpage help
+    #elif (message.content == 'kb ls help'):
+    #    await manpage.ls_help(message)
+    # display interrogative help
+    #elif (message.content.startswith('kb ls help ')):
+    #    await command.ls_help(message)
+    # command exec
+    #elif (message.content.startswith('kb ls ')):
+    #    await command.ls(message)
 # main
 client.run(DISCORD_TOKEN)

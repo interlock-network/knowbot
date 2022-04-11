@@ -27,8 +27,13 @@ kb = g.get_repo(repo)
 
 # pipe ls to grep
 async def ls_pipe_grep(message):
-    print("chirp")
 
+    # get correlative and keyphrase
+    # correl = message.content.replace('kb ls ', '')
+    correl, delimit, keyphrase = message.content.replace('kb ls ', '').partition(' | grep ')
+
+    print(correl)
+    print(keyphrase)
     # command is: kb-ls --what | grep keyword
     # kb ls what | grep keyword
 
@@ -39,6 +44,7 @@ async def ls_pipe_grep(message):
 # bash-style ls command
 async def ls(message):
 
+    # get correlative and initiate files list
     correl = message.content.replace('kb ls ', '')
     files: list = []
     
