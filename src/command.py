@@ -25,15 +25,53 @@ kb = g.get_repo(repo)
 
 
 
+
+
+# pipe ls all to grep
+async def ls_grep(message):
+
+    # initiate files list
+    files: list = []
+
+    # get keyphrase
+    keyphrase = message.content.replace('kb ls | grep ', '')
+
+    # get file contents and return error if no file or directory exists
+    try:
+        for correl in utility.correl:
+            for content in kb.get_contents(correl):
+                if content.name.__contains__(keyphrase):
+                    files.append(f'[{content.name}]({repofull}/blob/master/{correl}/{content.name})')
+    except:
+        await message.reply('Something catastrophic happened and I couldn\'t list the files you requested.')
+        return
+
+    # join into single chunk
+    files = '\n'.join(files)
+
+    # chunk and send as embed object
+    for chunk in utility.chunkstring(files, 4096): # max message reply string length is 4096 char
+        embed = discord.Embed(
+            title = f'{correl} ls:',
+            description = chunk,
+        )
+        await message.reply(embed=embed)
+
+    return
+
+
+
+
+
+
 # pipe ls correl to grep
 async def ls_correl_grep(message):
 
     # get correlative and keyphrase and initiate files list
     correl, delimit, keyphrase = message.content.replace('kb ls ', '').partition(' | grep ')
     files: list = []
+    print("chirp")
 
-    print(correl)
-    print(keyphrase)
     # get file contents and return error if no file or directory exists
     try:
         for content in kb.get_contents(correl):
