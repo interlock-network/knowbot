@@ -1,5 +1,5 @@
 
-# Knowledgebase Bot (kb-bot)
+# Knowledgebase Bot (knowbot)
 
 This repository contains code for the Interlock knowledgebase Discord bot. The concept was spawned from the interlock-kb [issue #46](https://github.com/interlock-network/interlock-kb/issues/46). So far, the intended design includes the following aspects:
 
@@ -9,20 +9,24 @@ This repository contains code for the Interlock knowledgebase Discord bot. The c
 The temptation is to mirror bash, quite painfully so,
 using flags to specify correlatives / else. IE:
 
-kb-find <name>   -> return list of all matching files in kb
-kb-find --who <name>   -> return list of all matching who files
-kb-find --what <name>   -> ...
+kb find <name>   -> return list of all matching files in kb
+kb find who <name>   -> return list of all matching who files
+kb find what <name>   -> ...
 
-kb-ls   -> return list of all correlatives
-kb-ls --who   -> return "who" correlative files
-kb-ls --what   -> ...
+kb cat <what/filename.md>   -> return contents of _filename.md_ from _what_
 
-kb-grep <string>   -> return all instances of string
-kb-grep --who <string>   -> return all instances of string in "who"
-kb-grep --what <string>   -> ...
+kb ls   -> return list of all correlatives
+kb ls who   -> return "who" correlative files
+kb ls what   -> ...
+kb ls | grep <string>   -> return all .md files with string in name
+kb ls what | grep <string>   -> return all .md files from _what_ with string in name
 
-kb-help   -> return basically a simple man page
-kb-<command> --help   -> return help for specific command
+kb grep <string>   -> return all instances of string
+kb grep who <string>   -> return all instances of string in "who"
+kb grep what <string>   -> ...
+
+kb help   -> return basically a simple man page
+kb <command> help   -> return help for specific command
 .
 .
 .
@@ -30,7 +34,7 @@ etc
 ```
 ```
 INCLUDE THIS FUNCTIONALITY:
-kbot scoops up tagged tidbits from RT discord chat
+knowbot scoops up tagged tidbits from RT discord chat
 and shoves them onto relevant discussion thread.
 ```
 ## Dependencies:
