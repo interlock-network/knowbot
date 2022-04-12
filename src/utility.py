@@ -23,13 +23,12 @@ def embedsplit(string, length):
         # trim off interrupted last line
         tail = theselines.pop()
 
-
         # count number of triple ticks in chunk
         for line in theselines:
             if line[0:3] == '```':             
                 ticks += 1
 
-        # TODO MAKE BLOCK CONTINUATION WORK NON-SHITTY VVVV
+        # TODO MAKE BLOCK CONTINUATION WORK NON-SHITTY
         # if odd number, then the a code block has been broken by the chunk
         # ... prepend ticks to end and beginning of current and next chunk
         if ticks % 2 == 1:

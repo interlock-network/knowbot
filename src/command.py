@@ -51,12 +51,15 @@ async def ls_grep(message):
     files = '\n'.join(files)
 
     # chunk and send as embed object
+    i = 1
+    chunkno = len(list(utility.embedsplit(files, 4096)))
     for chunk in utility.embedsplit(files, 4096): # max message reply string length is 4096 char
         embed = discord.Embed(
-            title = f'{correl} ls:',
+            title = f'ls | grep \'{keyphrase}\' _page {i}/{chunkno}_:',
             description = chunk,
         )
         await message.reply(embed=embed)
+        i += 1
 
     return
 
