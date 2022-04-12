@@ -14,6 +14,7 @@ from discord.ext import commands
 
 # PAT from blairmunroakusa for dev purposes
 # scope restricted to only access public repo info
+load_dotenv()
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 g = Github(GITHUB_TOKEN)
 
@@ -50,7 +51,7 @@ async def ls_grep(message):
     files = '\n'.join(files)
 
     # chunk and send as embed object
-    for chunk in utility.chunkstring(files, 4096): # max message reply string length is 4096 char
+    for chunk in utility.embedsplit(files, 4096): # max message reply string length is 4096 char
         embed = discord.Embed(
             title = f'{correl} ls:',
             description = chunk,
@@ -85,7 +86,7 @@ async def ls_correl_grep(message):
     files = '\n'.join(files)
 
     # chunk and send as embed object
-    for chunk in utility.chunkstring(files, 4096): # max message reply string length is 4096 char
+    for chunk in utility.embedsplit(files, 4096): # max message reply string length is 4096 char
         embed = discord.Embed(
             title = f'{correl} ls:',
             description = chunk,
@@ -117,7 +118,10 @@ async def ls(message):
     files = '\n'.join(files)
 
     # chunk and send as embed object
-    for chunk in utility.chunkstring(files, 4096): # max message reply string length is 4096 char
+    for chunk in utility.embedsplit(files, 4096): # max message reply string length is 4096 char
+
+
+
         embed = discord.Embed(
             title = f'{correl} ls:',
             description = chunk,
@@ -183,10 +187,10 @@ async def ls_help(message):
     joinedlines = joinedlines.replace('](', '](<')
 
     # chunk and send as embed object
-    stringchunks = utility.chunkstring(joinedlines, 4096)
+    stringchunks = utility.embedsplit(joinedlines, 4096)
     i = 1
     chunkno = len(list(stringchunks))
-    for chunk in utility.chunkstring(joinedlines, 4096): # max message reply string length is 4096 char
+    for chunk in utility.embedsplit(joinedlines, 4096): # max message reply string length is 4096 char
         embed = discord.Embed(
             title = f'{kbdata.name} _page {i}/{chunkno}_',
             description = chunk,
@@ -258,10 +262,10 @@ async def cat(message):
     joinedlines = joinedlines.replace('](', '](<')
 
     # break content into permittable chunks and reply in chat
-    stringchunks = utility.chunkstring(joinedlines, 4096)
+    stringchunks = utility.embedsplit(joinedlines, 4096)
     i = 1
     chunkno = len(list(stringchunks))
-    for chunk in utility.chunkstring(joinedlines, 4096): # max message reply string length is 4096 char
+    for chunk in utility.embedsplit(joinedlines, 4096): # max message reply string length is 4096 char
         embed = discord.Embed(
             title = f'{kbdata.name} _page {i}/{chunkno}_',
             description = chunk,
