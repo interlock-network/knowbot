@@ -1,6 +1,6 @@
 # INTERLOCK KNOWLEDGEBASE DISCORD BOT
 
-# include utility functions
+# include local modules
 import utility
 
 # include others
@@ -9,8 +9,6 @@ import discord
 import requests
 from dotenv import load_dotenv
 from github import Github
-from discord.ext import commands
-#from lib.globs import Git, Mgr
 
 # PAT from blairmunroakusa for dev purposes
 # scope restricted to only access public repo info
@@ -23,6 +21,64 @@ repo = 'World-Peace-Labs/testee'
 repofull = 'https://github.com/' + repo
 kb = g.get_repo(repo)
 
+
+
+# grep all
+async def grep_all(message):
+
+    # initiate files list
+    resultlines: list = []
+
+    # get keyphrase
+    keyphrase = message.content.replace('kb grep ', '').replace(' *', '')
+    print(keyphrase)
+
+    # get file contents and return error if no file or directory exists
+    try:
+        for correl in utility.correl:
+            for content in kb.get_contents(correl):
+                lines = content.decoded_content.splitlines()
+
+                # strip off all the markdown/html artifacts
+                lines = [ str(line).strip('b\'"!') for line in lines ]
+                
+                for line in lines:
+                    
+                    if line.__contains__(keyphrase):
+
+                        # deal with nonexistant discord markdown headers
+                        if str(line).startswith('##### '):
+                            line = line.replace('##### ', '_') + '_'
+                        if str(line).startswith('#### '):
+                            line = line.replace('#### ', '__') + '__'
+                        if str(line).startswith('### '):
+                            line = line.replace('### ', '***') + '***'
+                        if str(line).startswith('## '):
+                            line = line.replace('## ', '**') + '**'
+                        if str(line).startswith('# '):
+                            line = line.replace('# ', '__**') + '**__'
+
+
+    except:
+        await message.reply('Something catastrophic happened and I couldn\'t list the files you requested.')
+        return
+
+
+    # join into single chunk
+    resultlines = '\n'.join(resultlines)
+
+    # chunk and send as embed object
+    i = 1
+    chunkno = len(list(utility.embedsplit(resultlines, 4096)))
+    for chunk in utility.embedsplit(resultlines, 4096): # max message reply string length is 4096 char
+        embed = discord.Embed(
+            title = f'grep all \'{keyphrase}\' _page {i}/{chunkno}_:',
+            description = chunk,
+        )
+        await message.reply(embed=embed)
+        i += 1
+
+    return
 
 
 
@@ -74,7 +130,6 @@ async def ls_correl_grep(message):
     # get correlative and keyphrase and initiate files list
     correl, delimit, keyphrase = message.content.replace('kb ls ', '').partition(' | grep ')
     files: list = []
-    print("chirp")
 
     # get file contents and return error if no file or directory exists
     try:
@@ -270,7 +325,7 @@ async def cat(message):
     chunkno = len(list(stringchunks))
     for chunk in utility.embedsplit(joinedlines, 4096): # max message reply string length is 4096 char
         embed = discord.Embed(
-            title = f'{kbdata.name} _page {i}/{chunkno}_',
+            title = f'cat {kbdata.name} _page {i}/{chunkno}_',
             description = chunk,
         )
         i += 1

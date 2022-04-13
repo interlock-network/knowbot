@@ -67,7 +67,6 @@ async def on_message(message):
     # check for ls command to grep directory contents list
     # pipe grep directories ls from specific correlative
     head, delimit, tail = message.content.replace('kb ls ', '').partition('| grep ')
-    print(head,delimit,tail)
     if (not head == '' and message.content.__contains__(' | grep ')):
         await command.ls_correl_grep(message)
 
@@ -75,6 +74,13 @@ async def on_message(message):
     # pipe grep directories ls from specific correlative
     if message.content.startswith('kb ls | grep '):
         await command.ls_grep(message)
+
+    # check for grep command to grep all contents
+    # grep all
+    if (message.content.startswith('kb grep ') and
+        message.content.endswith(' *')):
+        await command.grep_all(message)
+
 
 # main
 client.run(DISCORD_TOKEN)
