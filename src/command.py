@@ -17,81 +17,55 @@ GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 g = Github(GITHUB_TOKEN)
 
 # define and get repo
-repo = 'World-Peace-Labs/testee'
-repofull = 'https://github.com/' + repo
-kb = g.get_repo(repo)
+kb = g.get_repo(utility.repo)
+repofull = utility.repofull
 
-
-
-# grep all
+# grep all command
 async def grep_all(message):
 
-    # initiate files list
+    # get keyphrase, define title, init files list
     resultlines: list = []
-
-    # get keyphrase
     keyphrase = message.content.replace('kb grep ', '').replace(' *', '')
-    print(keyphrase)
+    title = f'kb grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
     try:
         for correl in utility.correl:
             for content in kb.get_contents(correl):
+
+                # get decoded lines
                 lines = content.decoded_content.splitlines()
 
-                # strip off all the markdown/html artifacts
-                lines = [ str(line).strip('b\'"!') for line in lines ]
-                
                 for line in lines:
-                    
-                    if line.__contains__(keyphrase):
+                    if str(line).__contains__(keyphrase):
 
-                        # deal with nonexistant discord markdown headers
-                        if str(line).startswith('##### '):
-                            line = line.replace('##### ', '_') + '_'
-                        if str(line).startswith('#### '):
-                            line = line.replace('#### ', '__') + '__'
-                        if str(line).startswith('### '):
-                            line = line.replace('### ', '***') + '***'
-                        if str(line).startswith('## '):
-                            line = line.replace('## ', '**') + '**'
-                        if str(line).startswith('# '):
-                            line = line.replace('# ', '__**') + '**__'
+                        # cleanup line
+                        line = utility.cleanup_markdown(line)
 
+                        # condition and add to results
+                        resultlines.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name}): {line}')
 
     except:
-        await message.reply('Something catastrophic happened and I couldn\'t list the files you requested.')
+        await message.reply('I couldn\'t get what you requested from the repository.')
         return
 
-
-    # join into single chunk
-    resultlines = '\n'.join(resultlines)
+    # check for empty search result
+    if resultlines == []:
+        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
+        return
 
     # chunk and send as embed object
-    i = 1
-    chunkno = len(list(utility.embedsplit(resultlines, 4096)))
-    for chunk in utility.embedsplit(resultlines, 4096): # max message reply string length is 4096 char
-        embed = discord.Embed(
-            title = f'grep all \'{keyphrase}\' _page {i}/{chunkno}_:',
-            description = chunk,
-        )
-        await message.reply(embed=embed)
-        i += 1
+    await utility.embed_reply(message, resultlines, title)
 
     return
 
-
-
-
-
-# pipe ls all to grep
+# pipe ls all to grep command
 async def ls_grep(message):
 
-    # initiate files list
+    # get keyphrase, define title, init files list
     files: list = []
-
-    # get keyphrase
     keyphrase = message.content.replace('kb ls | grep ', '')
+    title = f'kb ls | grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
     try:
@@ -100,36 +74,26 @@ async def ls_grep(message):
                 if content.name.__contains__(keyphrase):
                     files.append(f'[{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
-        await message.reply('Something catastrophic happened and I couldn\'t list the files you requested.')
+        await message.reply('I couldn\'t get what you requested from the repository.')
         return
 
-    # join into single chunk
-    files = '\n'.join(files)
+    # check for empty search result
+    if files == []:
+        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
+        return
 
     # chunk and send as embed object
-    i = 1
-    chunkno = len(list(utility.embedsplit(files, 4096)))
-    for chunk in utility.embedsplit(files, 4096): # max message reply string length is 4096 char
-        embed = discord.Embed(
-            title = f'ls | grep \'{keyphrase}\' _page {i}/{chunkno}_:',
-            description = chunk,
-        )
-        await message.reply(embed=embed)
-        i += 1
+    await utility.embed_reply(message, files, title)
 
     return
 
-
-
-
-
-
-# pipe ls correl to grep
+# pipe ls correlative to grep command
 async def ls_correl_grep(message):
 
-    # get correlative and keyphrase and initiate files list
-    correl, delimit, keyphrase = message.content.replace('kb ls ', '').partition(' | grep ')
+    # get keyphrase, get correlative, define title, init files list
     files: list = []
+    correl, delimit, keyphrase = message.content.replace('kb ls ', '').partition(' | grep ')
+    title = f'kb ls \'{correl}\' | grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
     try:
@@ -137,197 +101,107 @@ async def ls_correl_grep(message):
             if content.name.__contains__(keyphrase):
                 files.append(f'[{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
-        await message.reply('Something catastrophic happened and I couldn\'t list the files you requested.')
+        await message.reply('I couldn\'t get what you requested from the repository.')
         return
 
-    # join into single chunk
-    files = '\n'.join(files)
+    # check for empty search result
+    if files == []:
+        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
+        return
 
     # chunk and send as embed object
-    for chunk in utility.embedsplit(files, 4096): # max message reply string length is 4096 char
-        embed = discord.Embed(
-            title = f'{correl} ls:',
-            description = chunk,
-        )
-        await message.reply(embed=embed)
+    await utility.embed_reply(message, files, title)
 
     return
 
-
-
-
-
-# bash-style ls command
+# ls command
 async def ls(message):
 
-    # get correlative and initiate files list
-    correl = message.content.replace('kb ls ', '')
+    # get correlative, define title, init files list
     files: list = []
+    correl = message.content.replace('kb ls ', '')
+    title = f'kb ls \'{correl}\' '
     
     # get file contents and return error if no file or directory exists
     try:
         for content in kb.get_contents(correl):
             files.append(f'[{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
-        await message.reply('Something catastrophic happened and I couldn\'t list the files you requested.')
+        await message.reply('I couldn\'t get what you requested from the repository.')
         return
 
-    # join into single chunk
-    files = '\n'.join(files)
+    # check for empty search result
+    if files == []:
+        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
+        return
 
     # chunk and send as embed object
-    for chunk in utility.embedsplit(files, 4096): # max message reply string length is 4096 char
-
-
-
-        embed = discord.Embed(
-            title = f'{correl} ls:',
-            description = chunk,
-        )
-        await message.reply(embed=embed)
+    await utility.embed_reply(message, files, title)
 
     return
 
-
-
-
-
-
-
 # ls command switch help
 async def ls_help(message):
-    
+
+    # define title and get filename
+    correl = message.content.strip('kb ls help ')
+    title = f'kb ls help \'{correl}\' '
+
     # get file contents and return error if no file or directory exists
     try:
-        kbdata = kb.get_contents(message.content.replace('kb ls help ', '') + '/README.md')
+        kbdata = kb.get_contents(correl + '/README.md')
     except:
-        await message.reply('ls: *' +
-            message.content.replace('kb ls help ', '') +
-            '*: no such interrogative correlative.')
+        await message.reply('I couldn\'t get what you requested from the repository, or the correlative doesn\'t exist.')
         return
 
     # decode file contents and return error if input is actually directory
     content = kbdata.decoded_content
 
-    # parse decoded content and condition for chat output
-
     # put into form that will display lines properly
     lines = content.splitlines()
 
-    # strip off all the markdown/html artifacts
-    lines = [ str(line).strip('b\'"!') for line in lines ]
-
-    # deal with nonexistant discord markdown headers
+    # cleanup lines
     i = 0
     for line in lines:
-        if str(line).startswith('##### '):
-            lines[i] = line.replace('##### ', '_') + '_'
-        if str(line).startswith('#### '):
-            lines[i] = line.replace('#### ', '__') + '__'
-        if str(line).startswith('### '):
-            lines[i] = line.replace('### ', '***') + '***'
-        if str(line).startswith('## '):
-            lines[i] = line.replace('## ', '**') + '**'
-        if str(line).startswith('# '):
-            lines[i] = line.replace('# ', '__**') + '**__'
+        lines[i] = utility.cleanup_markdown(line)
         i += 1 
 
-    # create a single formatted text piece
-    joinedlines = '\n'.join(lines)
-
-    # expand relative links into absolute links
-    joinedlines = joinedlines.replace(']( ', '](' + repofull + '/blob/master/')
-
-    # expand relative links into absolute links
-    joinedlines = joinedlines.replace('](.', '](' + repofull + '/blob/master')
-
-    # eliminate link previews in chat
-    joinedlines = joinedlines.replace('](', '](<')
-
     # chunk and send as embed object
-    stringchunks = utility.embedsplit(joinedlines, 4096)
-    i = 1
-    chunkno = len(list(stringchunks))
-    for chunk in utility.embedsplit(joinedlines, 4096): # max message reply string length is 4096 char
-        embed = discord.Embed(
-            title = f'{kbdata.name} _page {i}/{chunkno}_',
-            description = chunk,
-        )
-        i += 1
-        await message.reply(embed=embed)
+    await utility.embed_reply(message, lines, title)
 
     return
-
-
-
-
-
 
 # bash-style cat command
 async def cat(message):
 
+    # define title and get filename
+    filename = message.content.strip('kb cat ')
+    title = f'kb cat \'{filename}\' '
+
     # get file contents and return error if no file or directory exists
     try:
-        kbdata = kb.get_contents(message.content.strip('kb cat '))
+        kbdata = kb.get_contents(filename)
     except:
-        await message.reply('cat: *' +
-            message.content.replace('kb cat ', '') +
-            '*: no such markdown/text file or directory.')
+        await message.reply('I couldn\'t get what you requested from the repository, or the file doesn\'t exist.')
         return
 
     # decode file contents and return error if input is actually directory
     try:
         content = kbdata.decoded_content
     except:
-        await message.reply('cat: *' +
-            message.content.replace('kb cat ', '') +
-            '*: is a directory.')
+        await message.reply(f'\'{filename}\' is actually a directory, nothing to print.')
         return
 
-    # parse decoded content and condition for chat output
-
-    # put into form that will display lines properly
+    # get decoded lines
     lines = content.splitlines()
 
-    # strip off all the markdown/html artifacts
-    lines = [ str(line).strip('b\'"!') for line in lines ]
-
-    # deal with nonexistant discord markdown headers
+    # cleanup lines
     i = 0
     for line in lines:
-        if str(line).startswith('##### '):
-            lines[i] = line.replace('##### ', '_') + '_'
-        if str(line).startswith('#### '):
-            lines[i] = line.replace('#### ', '__') + '__'
-        if str(line).startswith('### '):
-            lines[i] = line.replace('### ', '***') + '***'
-        if str(line).startswith('## '):
-            lines[i] = line.replace('## ', '**') + '**'
-        if str(line).startswith('# '):
-            lines[i] = line.replace('# ', '__**') + '**__'
+        lines[i] = utility.cleanup_markdown(line)
         i += 1 
 
-    # create a single formatted text piece
-    joinedlines = '\n'.join(lines)
+    # chunk and send as embed object
+    await utility.embed_reply(message, lines, title)
 
-    # expand relative links into absolute links
-    joinedlines = joinedlines.replace(']( ', '](' + repofull + '/blob/master/')
-
-    # expand relative links into absolute links
-    joinedlines = joinedlines.replace('](.', '](' + repofull + '/blob/master')
-
-    # eliminate link previews in chat
-    joinedlines = joinedlines.replace('](', '](<')
-
-    # break content into permittable chunks and reply in chat
-    stringchunks = utility.embedsplit(joinedlines, 4096)
-    i = 1
-    chunkno = len(list(stringchunks))
-    for chunk in utility.embedsplit(joinedlines, 4096): # max message reply string length is 4096 char
-        embed = discord.Embed(
-            title = f'cat {kbdata.name} _page {i}/{chunkno}_',
-            description = chunk,
-        )
-        i += 1
-        await message.reply(embed=embed)
     return
