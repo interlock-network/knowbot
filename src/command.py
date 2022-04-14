@@ -17,8 +17,9 @@ GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 g = Github(GITHUB_TOKEN)
 
 # define and get repo
-kb = g.get_repo(utility.repo)
+kb = g.get_repo(utility.repolong)
 repofull = utility.repofull
+
 
 # grep all command
 async def grep_all(message):
@@ -113,6 +114,33 @@ async def ls_correl_grep(message):
     await utility.embed_reply(message, files, title)
 
     return
+
+# ls discussion command
+async def ls_discussions(message):
+
+    # get correlative, define title, init files list
+    discussions: list = []
+    title = f'kb ls discussions '
+    print('chirp')
+    
+    # get file contents and return error if no file or directory exists
+    try:
+        for content in kb.get_discussions():
+            discussions.append(f'[{content.title}]({repofull}/discussions/{content.number})')
+    except:
+        await message.reply('I couldn\'t get what you requested from the repository.')
+        return
+
+    # check for empty search result
+    if files == []:
+        await message.reply(f'Sorry, something happened and your request didn\'t return any results :/')
+        return
+
+    # chunk and send as embed object
+    await utility.embed_reply(message, discussions, title)
+
+    return
+
 
 # ls command
 async def ls(message):

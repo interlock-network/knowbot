@@ -4,8 +4,10 @@
 import discord
 
 # define repo
-repo = 'World-Peace-Labs/testee'
-repofull = 'https://github.com/' + repo
+org = 'interlock-network'
+repo = 'interlock-kb'
+repolong = org + '/' + repo
+repofull = 'https://github.com/' + repolong
 
 # break long string into chunks
 def chunkstring(string, length):
