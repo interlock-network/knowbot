@@ -28,7 +28,8 @@ def embedsplit(string, length):
         theselines = inter[0].split('\n')
     
         # trim off interrupted last line
-        tail = theselines.pop()
+        if len(string) > 4096:
+            tail = theselines.pop()
 
         # count number of triple ticks in chunk
         for line in theselines:
@@ -67,10 +68,11 @@ async def embed_reply(message, content, header):
     
     # chunk and send as embed object
     i = 1
-    chunkno = len(list(embedsplit(content, 4096)))
+    #chunkno = len(list(embedsplit(content, 4096)))
     for chunk in embedsplit(content, 4096): # max message reply string length is 4096 char
+        #print(chunk)
         embed = discord.Embed(
-            title = f'{header} _page {i}/{chunkno}_',
+            title = f'{header} _page {i}/{i}_',
             description = chunk,
         )
         await message.reply(embed=embed)

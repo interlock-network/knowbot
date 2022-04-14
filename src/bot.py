@@ -37,7 +37,7 @@ async def on_ready():
 # listen for messages
 @client.event
 async def on_message(message):
-
+    
     # check for cat command to print file
     # manpage help
     if (message.content == 'kb cat' or
@@ -50,7 +50,7 @@ async def on_message(message):
 
     # check for ls command to list directory contents
     # list correlative directories
-    elif (message.content == 'kb ls' or
+    if (message.content == 'kb ls' or
         message.content == 'kb ls '):
         await manpage.ls_list(message)
     # manpage help
@@ -67,12 +67,12 @@ async def on_message(message):
     # check for ls command to grep directory contents list
     # pipe grep directories ls from specific correlative
     head, delimit, tail = message.content.replace('kb ls ', '').partition('| grep ')
-    elif (not head == '' and message.content.__contains__(' | grep ')):
+    if (not head == '' and message.content.__contains__(' | grep ')):
         await command.ls_correl_grep(message)
 
     # check for ls command to grep all contents list
     # pipe grep directories ls from specific correlative
-    elif message.content.startswith('kb ls | grep '):
+    if message.content.startswith('kb ls | grep '):
         await command.ls_grep(message)
 
     # check for grep command to grep all contents
