@@ -61,8 +61,8 @@ async def on_message(message):
     elif (message.content.startswith('kb ls help ')):
         await command.ls_help(message)
     # command exec
-    elif (message.content == 'kb ls discussions'):
-        await discuss.ls_discussions(message)
+    elif (message.content == 'kb ls discuss'):
+        await discuss.ls_discussions(message, '', True)
     elif (message.content.startswith('kb ls ') and
         not message.content.__contains__(' | grep ')):
         await command.ls(message)

@@ -2,24 +2,34 @@
 
 # include local modules
 import utility
-import command
 
 # include modules
+import os
 import requests
 import json
+from dotenv import load_dotenv
 
+
+# PAT from blairmunroakusa for dev purposes
+# scope restricted to only access public repo info
+load_dotenv()
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 
 # setup to query
 url = 'https://api.github.com/graphql'
-api_token = command.GITHUB_TOKEN
+api_token = GITHUB_TOKEN
 headers = {'Authorization': f'token {api_token}' }
 
 
+
+
+
+
 # ls discussion command
-async def ls_discussions(message):
+async def ls_discussions(message, keyphrase, reply):
 
     # define title, and discussions list
-    title = f'kb ls discussions '
+    title = f'kb ls discuss '
     discussions = []
     
     # define query variables
@@ -66,11 +76,14 @@ async def ls_discussions(message):
     totalcount = querydata.json()['data']['repository']['discussions']['totalCount']
     querydata = querydata.json()['data']['repository']['discussions']
     
-    # create list of discussion title links
+    # continue building list discussion title list
     for discussion in querydata['nodes']:
-        discussions.append(f'[{discussion["title"]}]({discussion["url"]})')
-
-
+        if not reply:
+            if discussion['title'].__contains__(keyphrase):
+                discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
+                print(discussions)
+        else:
+            discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
 
     # new ls graphql query with cursor
     ls = """
@@ -119,14 +132,19 @@ async def ls_discussions(message):
 
         # continue building list discussion title list
         for discussion in querydata['nodes']:
-            discussions.append(f'[{discussion["title"]}]({discussion["url"]})')
+            if not reply:
+                if discussion['title'].__contains__(keyphrase):
+                    discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
+            else:
+                discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
 
         count += 100
 
-    # chunk and send as embed object
-    await utility.embed_reply(message, discussions, title)
+    if reply:
+        # chunk and send as embed object
+        await utility.embed_reply(message, discussions, title)
 
-    return
+    return discussions
 
 
     """

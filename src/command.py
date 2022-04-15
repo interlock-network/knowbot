@@ -2,19 +2,14 @@
 
 # include local modules
 import utility
+import discuss
 
 # include others
-import os
 import discord
 import requests
-from dotenv import load_dotenv
 from github import Github
 
-# PAT from blairmunroakusa for dev purposes
-# scope restricted to only access public repo info
-load_dotenv()
-GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
-g = Github(GITHUB_TOKEN)
+g = Github(discuss.GITHUB_TOKEN)
 
 # define and get repo
 kb = g.get_repo(utility.repolong)
@@ -72,8 +67,10 @@ async def ls_grep(message):
     try:
         for correl in utility.correl:
             for content in kb.get_contents(correl):
-                if content.name.__contains__(keyphrase):
-                    files.append(f'[{content.name}]({repofull}/blob/master/{correl}/{content.name})')
+                print(content.name.lower())
+                print(keyphrase.lower())
+                if content.name.lower().__contains__(keyphrase.lower()):
+                    files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
         return
@@ -82,6 +79,10 @@ async def ls_grep(message):
     if files == []:
         await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
         return
+
+    # import discussion lst and add to files list
+    discussions = await discuss.ls_discussions(message, keyphrase, False)
+    files.append(str(discussions).strip('\']').strip('[').strip('\''))
 
     # chunk and send as embed object
     await utility.embed_reply(message, files, title)
@@ -100,7 +101,7 @@ async def ls_correl_grep(message):
     try:
         for content in kb.get_contents(correl):
             if content.name.__contains__(keyphrase):
-                files.append(f'[{content.name}]({repofull}/blob/master/{correl}/{content.name})')
+                files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
         return
@@ -112,32 +113,6 @@ async def ls_correl_grep(message):
 
     # chunk and send as embed object
     await utility.embed_reply(message, files, title)
-
-    return
-
-# ls discussion command
-async def ls_discussions(message):
-
-    # get correlative, define title, init files list
-    discussions: list = []
-    title = f'kb ls discussions '
-    print('chirp')
-    
-    # get file contents and return error if no file or directory exists
-    try:
-        for content in kb.get_discussions():
-            discussions.append(f'[{content.title}]({repofull}/discussions/{content.number})')
-    except:
-        await message.reply('I couldn\'t get what you requested from the repository.')
-        return
-
-    # check for empty search result
-    if files == []:
-        await message.reply(f'Sorry, something happened and your request didn\'t return any results :/')
-        return
-
-    # chunk and send as embed object
-    await utility.embed_reply(message, discussions, title)
 
     return
 
@@ -153,7 +128,7 @@ async def ls(message):
     # get file contents and return error if no file or directory exists
     try:
         for content in kb.get_contents(correl):
-            files.append(f'[{content.name}]({repofull}/blob/master/{correl}/{content.name})')
+            files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
         return
