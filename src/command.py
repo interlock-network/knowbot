@@ -33,7 +33,7 @@ async def grep_all(message):
                 lines = content.decoded_content.splitlines()
 
                 for line in lines:
-                    if str(line).__contains__(keyphrase):
+                    if str(line.lower()).__contains__(keyphrase.lower()):
 
                         # cleanup line
                         line = utility.cleanup_markdown(line)
@@ -67,8 +67,6 @@ async def ls_grep(message):
     try:
         for correl in utility.correl:
             for content in kb.get_contents(correl):
-                print(content.name.lower())
-                print(keyphrase.lower())
                 if content.name.lower().__contains__(keyphrase.lower()):
                     files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
@@ -82,7 +80,8 @@ async def ls_grep(message):
 
     # import discussion lst and add to files list
     discussions = await discuss.ls_discussions(message, keyphrase, False)
-    files.append(str(discussions).strip('\']').strip('[').strip('\''))
+    for discussion in discussions:
+        files.append(discussion)
 
     # chunk and send as embed object
     await utility.embed_reply(message, files, title)
@@ -100,7 +99,7 @@ async def ls_correl_grep(message):
     # get file contents and return error if no file or directory exists
     try:
         for content in kb.get_contents(correl):
-            if content.name.__contains__(keyphrase):
+            if content.name.lower().__contains__(keyphrase.lower()):
                 files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')

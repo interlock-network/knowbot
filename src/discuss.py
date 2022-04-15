@@ -79,9 +79,8 @@ async def ls_discussions(message, keyphrase, reply):
     # continue building list discussion title list
     for discussion in querydata['nodes']:
         if not reply:
-            if discussion['title'].__contains__(keyphrase):
+            if discussion['title'].lower().__contains__(keyphrase.lower()):
                 discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
-                print(discussions)
         else:
             discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
 
@@ -133,7 +132,7 @@ async def ls_discussions(message, keyphrase, reply):
         # continue building list discussion title list
         for discussion in querydata['nodes']:
             if not reply:
-                if discussion['title'].__contains__(keyphrase):
+                if discussion['title'].lower().__contains__(keyphrase.lower()):
                     discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
             else:
                 discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
