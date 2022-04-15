@@ -208,10 +208,7 @@ async def grep_discussions(message, keyphrase, reply):
                 resultlines.append(f'[discuss/{discussion["title"]}]({discussion["url"]}): {line}')
 
 
-    await utility.embed_reply(message, resultlines, title)
-
-    return resultlines
-"""
+    """
     # new ls graphql query with cursor
     ls = 
         query($owner: String!, $reponame: String!, $cursor: String!) {
@@ -267,10 +264,13 @@ async def grep_discussions(message, keyphrase, reply):
                 discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
 
         count += 100
-"""
+    """
     #if reply:
         # chunk and send as embed object
 
+    await utility.embed_reply(message, resultlines, title)
+
+    return resultlines
 
 
 
