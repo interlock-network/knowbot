@@ -11,6 +11,7 @@
 # include local .py files
 import manpage
 import command
+import discuss
 
 # include others
 import os
@@ -61,7 +62,7 @@ async def on_message(message):
         await command.ls_help(message)
     # command exec
     elif (message.content == 'kb ls discussions'):
-        await command.ls_discussions(message)
+        await discuss.ls_discussions(message)
     elif (message.content.startswith('kb ls ') and
         not message.content.__contains__(' | grep ')):
         await command.ls(message)
