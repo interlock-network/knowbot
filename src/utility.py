@@ -65,16 +65,16 @@ def embedsplit(string, length):
 # chunk and send as embed object
 async def embed_reply(message, content, header):
 
-    #join lines of content
+    #join lines of conten
     content = '\n'.join(content)
     
     # chunk and send as embed object
     i = 1
-    #chunkno = len(list(embedsplit(content, 4096)))
+    chunkno = len(list(embedsplit(content, 4096)))
     for chunk in embedsplit(content, 4096): # max message reply string length is 4096 char
         #print(chunk)
         embed = discord.Embed(
-            title = f'{header} _page {i}/{i}_',
+            title = f'{header} _page {i}/{chunkno}_',
             description = chunk,
         )
         await message.reply(embed=embed)

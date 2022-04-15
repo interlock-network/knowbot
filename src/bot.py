@@ -83,6 +83,9 @@ async def on_message(message):
     elif (message.content.startswith('kb grep ') and
         message.content.endswith(' *')):
         await command.grep_all(message)
+    elif (message.content.startswith('kb grep ') and
+        message.content.endswith(' discuss')):
+        await discuss.grep_discussions(message, '', True)
 
 
 # main
