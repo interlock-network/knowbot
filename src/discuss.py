@@ -14,37 +14,126 @@ url = 'https://api.github.com/graphql'
 api_token = command.GITHUB_TOKEN
 headers = {'Authorization': f'token {api_token}' }
 
-# define query variables
-variables = {
-    'owner': utility.org,
-    'reponame': utility.repo,
-}
 
-# ls command for repo discussions
+# ls discussion command
+async def ls_discussions(message):
 
-# ls graphql query
-ls = """
-    query($owner: String!, $reponame: String!) {
-        repository(owner: $owner, name: $reponame) {
-            discussions(first: 100) {
-                totalCount
-                nodes {
-                    title 
-                    url
+    # define title, and discussions list
+    title = f'kb ls discussions '
+    discussions = []
+    
+    # define query variables
+    variables = {
+        'owner': utility.org,
+        'reponame': utility.repo,
+    }
+
+    # get first 100 (max) discussions
+
+    # ls graphql query
+    ls = """
+        query($owner: String!, $reponame: String!) {
+            repository(owner: $owner, name: $reponame) {
+                discussions(first: 100) {
+                    totalCount
+                    pageInfo {
+                        endCursor
+                    }
+                    nodes {
+                        title 
+                        url
+                    }
                 }
             }
         }
+    """
+
+    # package final query json for ls command
+    json_ls = {
+        'query': ls,
+        'variables': variables,
     }
-"""
 
-# package final query json for ls command
-json_ls = {
-    'query': ls,
-    'variables': variables,
-}
+    # get discussion contents and return error if no file or directory exists
+    try:
+        # get discussion titles and urls
+        querydata = requests.post(url=url, json=json_ls, headers=headers)
+    except:
+        await message.reply('I couldn\'t get the discussions you requested from the repository.')
+        return
+
+    # parse returned discussions json
+    totalcount = querydata.json()['data']['repository']['discussions']['totalCount']
+    querydata = querydata.json()['data']['repository']['discussions']
+    
+    # create list of discussion title links
+    for discussion in querydata['nodes']:
+        discussions.append(f'[{discussion["title"]}]({discussion["url"]})')
 
 
-# ls discussion command
+
+    # new ls graphql query with cursor
+    ls = """
+        query($owner: String!, $reponame: String!, $cursor: String!) {
+            repository(owner: $owner, name: $reponame) {
+                discussions(first: 10, after: $cursor) {
+                    totalCount
+                    pageInfo {
+                        endCursor
+                    }
+                    nodes {
+                        title 
+                        url
+                    }
+                }
+            }
+        }
+    """
+
+    count = 100
+    while count < totalcount:
+
+        # redefine query variables to include cursor to get next page of 100 discussions
+        variables = {
+            'owner': utility.org,
+            'reponame': utility.repo,
+            'cursor': querydata['pageInfo']['endCursor']
+        } 
+
+        # build new json object
+        json_ls = {
+            'query': ls,
+            'variables': variables,
+        }
+
+        # get discussion contents and return error if no file or directory exists
+        try:
+            # get discussion titles and urls
+            querydata = requests.post(url=url, json=json_ls, headers=headers)
+        except:
+            await message.reply('I couldn\'t get the discussions you requested from the repository.')
+            return
+
+        # parse returned discussions json
+        querydata = querydata.json()['data']['repository']['discussions']
+
+        # continue building list discussion title list
+        for discussion in querydata['nodes']:
+            discussions.append(f'[{discussion["title"]}]({discussion["url"]})')
+
+        count += 100
+
+    # chunk and send as embed object
+    await utility.embed_reply(message, discussions, title)
+
+    return
+
+
+    """
+
+
+
+# cat discussion command
 async def ls_discussions(message):
 
     # define title, and discussions list
@@ -61,11 +150,10 @@ async def ls_discussions(message):
 
     # parse returned discussions json
     totalcount = querydata.json()['data']['repository']['discussions']['totalCount']
-    print(totalcount)
     querydata = querydata.json()['data']['repository']['discussions']['nodes']
 
     
-    for discussion in querydata[:]:
+    for discussion in querydata:
         discussions.append(f'[{discussion["title"]}]({discussion["url"]})')
 
     # add segment to process >100 discussions here
@@ -77,5 +165,5 @@ async def ls_discussions(message):
     await utility.embed_reply(message, discussions, title)
 
     return
-
+"""
 
