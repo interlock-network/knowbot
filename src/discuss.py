@@ -138,11 +138,17 @@ async def ls_discussions(message, keyphrase, reply):
                 discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
 
         count += 100
+
+    # check for empty search result
+    if resultlines == []:
+        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
+        return
+    
+    # if called directly from bot.py, reply to message with embed object
     if reply:
         # chunk and send as embed object
         await utility.embed_reply(message, discussions, title)
 
-    print(discussions)
     return discussions
 
 
@@ -151,7 +157,10 @@ async def grep_discussions(message, keyphrase, reply):
 
     # get keyphrase, define title, init files list
     resultlines: list = []
-    keyphrase = message.content.replace('kb grep ', '').replace(' discuss', '')
+    if reply:
+        keyphrase = message.content.replace('kb grep ', '').replace(' discuss', '')
+    else:
+        keyphrase = message.content.replace('kb grep ', '').replace(' *', '')
     title = f'kb grep \'{keyphrase}\' discuss '
 
     
@@ -227,6 +236,7 @@ async def grep_discussions(message, keyphrase, reply):
         }
     """
 
+
     count = 100
     while count < totalcount:
 
@@ -262,9 +272,15 @@ async def grep_discussions(message, keyphrase, reply):
                     resultlines.append(f'[discuss/{discussion["title"]}]({discussion["url"]}): {line}')
         count += 100
 
+    # check for empty search result
+    if resultlines == []:
+        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
+        return
+
+    # if called directly by bot.py, reply to message with embed object
     if reply:
         await utility.embed_reply(message, resultlines, title)
-
+    
     return resultlines
 
 

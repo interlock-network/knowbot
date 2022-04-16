@@ -45,15 +45,16 @@ async def grep_all(message):
         await message.reply('I couldn\'t get what you requested from the repository.')
         return
 
-    # check for empty search result
-    if resultlines == []:
-        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
-        return
 
     # import discussion lst and add to files list
     discussionlines = await discuss.grep_discussions(message, keyphrase, False)
     for discussionline in discussionlines:
         resultlines.append(discussionline)
+
+    # check for empty search result
+    if resultlines == []:
+        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
+        return
 
     # chunk and send as embed object
     await utility.embed_reply(message, resultlines, title)
@@ -78,7 +79,6 @@ async def ls_grep(message):
         await message.reply('I couldn\'t get what you requested from the repository.')
         return
 
-    print('chirp')
     # import discussion lst and add to files list
     discussions = await discuss.ls_discussions(message, keyphrase, False)
     for discussion in discussions:
