@@ -88,7 +88,7 @@ async def ls_discussions(message, keyphrase, reply):
     ls = """
         query($owner: String!, $reponame: String!, $cursor: String!) {
             repository(owner: $owner, name: $reponame) {
-                discussions(first: 10, after: $cursor) {
+                discussions(first: 100, after: $cursor) {
                     totalCount
                     pageInfo {
                         endCursor
@@ -138,11 +138,11 @@ async def ls_discussions(message, keyphrase, reply):
                 discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
 
         count += 100
-
     if reply:
         # chunk and send as embed object
         await utility.embed_reply(message, discussions, title)
 
+    print(discussions)
     return discussions
 
 
@@ -208,12 +208,11 @@ async def grep_discussions(message, keyphrase, reply):
                 resultlines.append(f'[discuss/{discussion["title"]}]({discussion["url"]}): {line}')
 
 
-    """
     # new ls graphql query with cursor
-    ls = 
+    ls = """
         query($owner: String!, $reponame: String!, $cursor: String!) {
             repository(owner: $owner, name: $reponame) {
-                discussions(first: 10, after: $cursor) {
+                discussions(first: 100, after: $cursor) {
                     totalCount
                     pageInfo {
                         endCursor
@@ -226,7 +225,7 @@ async def grep_discussions(message, keyphrase, reply):
                 }
             }
         }
-    
+    """
 
     count = 100
     while count < totalcount:
@@ -257,18 +256,14 @@ async def grep_discussions(message, keyphrase, reply):
 
         # continue building list discussion title list
         for discussion in querydata['nodes']:
-            if not reply:
-                if discussion['title'].lower().__contains__(keyphrase.lower()):
-                    discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
-            else:
-                discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
-
+            lines = discussion['body'].splitlines()
+            for line in lines:
+                if line.lower().__contains__(keyphrase.lower()):
+                    resultlines.append(f'[discuss/{discussion["title"]}]({discussion["url"]}): {line}')
         count += 100
-    """
-    #if reply:
-        # chunk and send as embed object
 
-    await utility.embed_reply(message, resultlines, title)
+    if reply:
+        await utility.embed_reply(message, resultlines, title)
 
     return resultlines
 
