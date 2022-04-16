@@ -45,11 +45,12 @@ async def grep_all(message):
         await message.reply('I couldn\'t get what you requested from the repository.')
         return
 
-
-    # import discussion lst and add to files list
-    discussionlines = await discuss.grep_discussions(message, keyphrase, False)
-    for discussionline in discussionlines:
-        resultlines.append(discussionline)
+    # import discussion line matches and add to result lines list
+    # 'False' indicates to grep_discussions that no print is needed
+    discussionlines = await discuss.grep_discuss(message, keyphrase, False)
+    if not discussionlines == None:
+        for discussionline in discussionlines:
+            resultlines.append(discussionline)
 
     # check for empty search result
     if resultlines == []:
@@ -80,9 +81,11 @@ async def ls_grep(message):
         return
 
     # import discussion lst and add to files list
-    discussions = await discuss.ls_discussions(message, keyphrase, False)
-    for discussion in discussions:
-        files.append(discussion)
+    # 'False' indicates to grep_discussions that no print is needed
+    discussions = await discuss.ls_discuss(message, keyphrase, False)
+    if not discussions == None:
+        for discussion in discussions:
+            files.append(discussion)
 
     # check for empty search result
     if files == []:

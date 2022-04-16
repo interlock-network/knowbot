@@ -62,7 +62,7 @@ async def on_message(message):
         await command.ls_help(message)
     # command exec
     elif (message.content == 'kb ls discuss'):
-        await discuss.ls_discussions(message, '', True)
+        await discuss.ls_discuss(message, '', True)
     elif (message.content.startswith('kb ls ') and
         not message.content.__contains__(' | grep ')):
         await command.ls(message)
@@ -85,7 +85,7 @@ async def on_message(message):
         await command.grep_all(message)
     elif (message.content.startswith('kb grep ') and
         message.content.endswith(' discuss')):
-        await discuss.grep_discussions(message, '', True)
+        await discuss.grep_discuss(message, '', True)
 
 
 # main

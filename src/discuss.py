@@ -20,13 +20,8 @@ url = 'https://api.github.com/graphql'
 api_token = GITHUB_TOKEN
 headers = {'Authorization': f'token {api_token}' }
 
-
-
-
-
-
 # ls discussion command
-async def ls_discussions(message, keyphrase, reply):
+async def ls_discuss(message, keyphrase, reply):
 
     # define title, and discussions list
     title = f'kb ls discuss '
@@ -39,7 +34,6 @@ async def ls_discussions(message, keyphrase, reply):
     }
 
     # get first 100 (max) discussions
-
     # ls graphql query
     ls = """
         query($owner: String!, $reponame: String!) {
@@ -102,6 +96,7 @@ async def ls_discussions(message, keyphrase, reply):
         }
     """
 
+    # if discussion count >100, resume query at last cursor until reach totalcount
     count = 100
     while count < totalcount:
 
@@ -140,7 +135,7 @@ async def ls_discussions(message, keyphrase, reply):
         count += 100
 
     # check for empty search result
-    if resultlines == []:
+    if (discussions == [] and reply == True):
         await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
         return
     
@@ -151,9 +146,8 @@ async def ls_discussions(message, keyphrase, reply):
 
     return discussions
 
-
 # grep discussion command
-async def grep_discussions(message, keyphrase, reply):
+async def grep_discuss(message, keyphrase, reply):
 
     # get keyphrase, define title, init files list
     resultlines: list = []
@@ -171,7 +165,6 @@ async def grep_discussions(message, keyphrase, reply):
     }
 
     # get first 100 (max) discussions
-
     # ls graphql query
     ls = """
         query($owner: String!, $reponame: String!) {
@@ -216,7 +209,6 @@ async def grep_discussions(message, keyphrase, reply):
             if line.lower().__contains__(keyphrase.lower()):
                 resultlines.append(f'[discuss/{discussion["title"]}]({discussion["url"]}): {line}')
 
-
     # new ls graphql query with cursor
     ls = """
         query($owner: String!, $reponame: String!, $cursor: String!) {
@@ -236,7 +228,7 @@ async def grep_discussions(message, keyphrase, reply):
         }
     """
 
-
+    # if discussion count >100, resume query at last cursor until reach totalcount
     count = 100
     while count < totalcount:
 
@@ -273,7 +265,7 @@ async def grep_discussions(message, keyphrase, reply):
         count += 100
 
     # check for empty search result
-    if resultlines == []:
+    if (resultlines == [] and reply == True):
         await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
         return
 
