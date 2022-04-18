@@ -1,12 +1,16 @@
+##########################################
+#
 # INTERLOCK KNOWLEDGEBASE DISCORD BOT
+# bot.py
+#
+##########################################
 
 # TODO:
 # . mention license in header
-# x get simple hello world running
-# x implement internals to interact with discord chat
-# x implement internals to interact with github API
-# x implement cat functionality
-# . implement ls functionality
+
+##########################################
+# setup
+##########################################
 
 # include local .py files
 import manpage
@@ -35,7 +39,10 @@ async def on_ready():
         f'{server.name}(id: {server.id})'
     )
 
+##########################################
 # listen for messages
+##########################################
+
 @client.event
 async def on_message(message):
     
@@ -51,8 +58,9 @@ async def on_message(message):
 
     # check for ls command to list directory contents
     # list correlative directories
-    if (message.content == 'kb ls' or
-        message.content == 'kb ls '):
+    if (message.content == 'kb ls *'):
+        await command.ls_all(message)
+    elif (message.content == 'kb ls '):
         await manpage.ls_list(message)
     # manpage help
     elif (message.content == 'kb ls help'):
@@ -65,7 +73,7 @@ async def on_message(message):
         await discuss.ls_discuss(message, '', True)
     elif (message.content.startswith('kb ls ') and
         not message.content.__contains__(' | grep ')):
-        await command.ls(message)
+        await command.ls_directory(message)
 
     # check for ls command to grep directory contents list
     # pipe grep directories ls from specific correlative
@@ -87,6 +95,8 @@ async def on_message(message):
         message.content.endswith(' discuss')):
         await discuss.grep_discuss(message, '', True)
 
-
+##########################################
 # main
+##########################################
+
 client.run(DISCORD_TOKEN)

@@ -1,22 +1,44 @@
+##########################################
+#
 # INTERLOCK KNOWLEDGEBASE DISCORD BOT
+# command.py
+#
+##########################################
+
+# TODO
+# . create ls *
+# . create grep for each correlative
+# . create ls
+
+##########################################
+# setup
+##########################################
 
 # include local modules
 import utility
 import discuss
 
 # include others
+import os
 import discord
 import requests
+from dotenv import load_dotenv
 from github import Github
 
-g = Github(discuss.GITHUB_TOKEN)
+# PAT from blairmunroakusa for dev purposes
+# scope restricted to only access public repo info
+load_dotenv()
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+g = Github(GITHUB_TOKEN)
 
 # define and get repo
 kb = g.get_repo(utility.repolong)
 repofull = utility.repofull
 
+##########################################
+# grep <keyphrase> *
+##########################################
 
-# grep all command
 async def grep_all(message):
 
     # get keyphrase, define title, init files list
@@ -48,6 +70,7 @@ async def grep_all(message):
     # import discussion line matches and add to result lines list
     # 'False' indicates to grep_discussions that no print is needed
     discussionlines = await discuss.grep_discuss(message, keyphrase, False)
+    # 'None' indicates discuss search returned no results; if None, continue
     if not discussionlines == None:
         for discussionline in discussionlines:
             resultlines.append(discussionline)
@@ -62,7 +85,10 @@ async def grep_all(message):
 
     return
 
-# pipe ls all to grep command
+##########################################
+# ls | grep <keyphrase>
+##########################################
+
 async def ls_grep(message):
 
     # get keyphrase, define title, init files list
@@ -83,6 +109,7 @@ async def ls_grep(message):
     # import discussion lst and add to files list
     # 'False' indicates to grep_discussions that no print is needed
     discussions = await discuss.ls_discuss(message, keyphrase, False)
+    # 'None' indicates discuss search returned no results; if None, continue
     if not discussions == None:
         for discussion in discussions:
             files.append(discussion)
@@ -97,7 +124,10 @@ async def ls_grep(message):
 
     return
 
-# pipe ls correlative to grep command
+##########################################
+# ls <correlative> | grep <keyphrase>
+##########################################
+
 async def ls_correl_grep(message):
 
     # get keyphrase, get correlative, define title, init files list
@@ -124,9 +154,48 @@ async def ls_correl_grep(message):
 
     return
 
+##########################################
+# ls
+##########################################
 
-# ls command
-async def ls(message):
+async def ls_all(message):
+
+    # get correlative, define title, init files list
+    files: list = []
+    title = f'kb ls *'
+    
+    # get file contents and return error if no file or directory exists
+    try:
+        for directory in utility.correl:
+            for content in kb.get_contents(directory):
+                files.append(f'[{directory}/{content.name}]({repofull}/blob/master/{directory}/{content.name})')
+    except:
+        await message.reply('I couldn\'t get what you requested from the repository.')
+        return
+
+    # import discussion lst and add to files list
+    # 'False' indicates to grep_discussions that no print is needed
+    discussions = await discuss.ls_discuss(message, '', False)
+    # 'None' indicates discuss search returned no results; if None, continue
+    if not discussions == None:
+        for discussion in discussions:
+            files.append(discussion)
+
+    # check for empty search result
+    if files == []:
+        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
+        return
+
+    # chunk and send as embed object
+    await utility.embed_reply(message, files, title)
+
+    return
+
+##########################################
+# ls <correlative>
+##########################################
+
+async def ls_directory(message):
 
     # get correlative, define title, init files list
     files: list = []
@@ -151,7 +220,10 @@ async def ls(message):
 
     return
 
-# ls command switch help
+##########################################
+# ls help <correlative>
+##########################################
+
 async def ls_help(message):
 
     # define title and get filename
@@ -182,7 +254,10 @@ async def ls_help(message):
 
     return
 
-# bash-style cat command
+##########################################
+# cat <filename>
+##########################################
+
 async def cat(message):
 
     # define title and get filename

@@ -1,9 +1,17 @@
+##########################################
+#
 # INTERLOCK KNOWLEDGEBASE DISCORD BOT
+# manpage.py
+#
+##########################################
 
 # include others
 import discord
 
-# display ls list for correlative options
+##########################################
+# ls list options
+##########################################
+
 async def ls_list(message):
     output = """
 CHOOSE A CORRELATIVE LIKE SO
@@ -28,7 +36,10 @@ CHOOSE A CORRELATIVE LIKE SO
 
     return
 
-# display ls help man page
+##########################################
+# ls help
+##########################################
+
 async def ls_help(message):
     output = """
 NAME
@@ -60,7 +71,10 @@ EXAMPLES
     await message.reply(embed=embed)
     return
 
+##########################################
 # display cat help man page
+##########################################
+
 async def cat_help(message):
     output = """
 NAME

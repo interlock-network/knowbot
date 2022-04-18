@@ -1,4 +1,18 @@
+##########################################
+#
 # INTERLOCK KNOWLEDGEBASE DISCORD BOT
+# discuss.py
+#
+##########################################
+
+# TODO
+# . include comments in grep discuss
+# . create cat for discussion main entry
+# .
+
+##########################################
+# setup
+##########################################
 
 # include local modules
 import utility
@@ -8,7 +22,6 @@ import os
 import requests
 import json
 from dotenv import load_dotenv
-
 
 # PAT from blairmunroakusa for dev purposes
 # scope restricted to only access public repo info
@@ -20,7 +33,10 @@ url = 'https://api.github.com/graphql'
 api_token = GITHUB_TOKEN
 headers = {'Authorization': f'token {api_token}' }
 
-# ls discussion command
+##########################################
+# ls discuss
+##########################################
+
 async def ls_discuss(message, keyphrase, reply):
 
     # define title, and discussions list
@@ -72,7 +88,7 @@ async def ls_discuss(message, keyphrase, reply):
     
     # continue building list discussion title list
     for discussion in querydata['nodes']:
-        if not reply:
+        if (not reply and not keyphrase == ''):
             if discussion['title'].lower().__contains__(keyphrase.lower()):
                 discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
         else:
@@ -146,7 +162,10 @@ async def ls_discuss(message, keyphrase, reply):
 
     return discussions
 
-# grep discussion command
+##########################################
+# grep discuss
+##########################################
+
 async def grep_discuss(message, keyphrase, reply):
 
     # get keyphrase, define title, init files list
@@ -176,7 +195,7 @@ async def grep_discuss(message, keyphrase, reply):
                     }
                     nodes {
                         body
-                        title 
+                        title
                         url
                     }
                 }
@@ -276,11 +295,14 @@ async def grep_discuss(message, keyphrase, reply):
     return resultlines
 
 
+##########################################
+# cat discuss
+##########################################
+
+
 
 
 """
-
-
 
 # cat discussion command
 async def ls_discussions(message):

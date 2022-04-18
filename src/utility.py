@@ -1,6 +1,17 @@
+##########################################
+#
 # INTERLOCK KNOWLEDGEBASE DISCORD BOT
+# utility.py
+#
+##########################################
 
-# include
+# TODO
+
+##########################################
+# setup
+#########################################
+
+## include
 import discord
 
 # define repo
@@ -9,13 +20,18 @@ repo = 'interlock-kb'
 repolong = org + '/' + repo
 repofull = 'https://github.com/' + repolong
 
+##########################################
 # break long string into chunks
+##########################################
+
 def chunkstring(string, length):
    return (string[i:(length + i)] for i in range(0, len(string), length))
 
 
+##########################################
+# create embed chunks, preserving links and format
+##########################################
 
-# create embed chunks without breaking lines between chunks (to preserve links, etc)
 def embedsplit(string, length):
 
     # cycle through string breaking into nice chunks
@@ -61,8 +77,10 @@ def embedsplit(string, length):
         
     return out
 
-
+##########################################
 # chunk and send as embed object
+##########################################
+
 async def embed_reply(message, content, header):
 
     #join lines of conten
@@ -80,9 +98,10 @@ async def embed_reply(message, content, header):
         await message.reply(embed=embed)
         i += 1
 
+##########################################
+# convert regular markdown into discord markdown
+##########################################
 
-
-# convert regular markdown into crappy discord markdown
 def cleanup_markdown(line):
 
     # strip off artifacts
@@ -108,8 +127,10 @@ def cleanup_markdown(line):
 
     return line
 
-
+##########################################
 # list of correlatives
+##########################################
+
 correl = ['how-many',
         'how',
         'what-kind-of',
