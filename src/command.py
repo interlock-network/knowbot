@@ -158,6 +158,32 @@ async def ls_correl_grep(message):
 # ls
 ##########################################
 
+async def ls(message):
+
+    # get correlative, define title, init files list
+    files: list = []
+    title = f'kb ls'
+    
+    # get file contents and return error if no file or directory exists
+    try:
+            for content in kb.get_contents(''):
+                files.append(f'[{content.name}]({repofull}/{content.name})')
+    except:
+        await message.reply('I couldn\'t get what you requested from the repository.')
+        return
+
+    # append discussions
+    files.append(f'[discuss]({repofull}/discussions)')
+    
+    # chunk and send as embed object
+    await utility.embed_reply(message, files, title)
+
+    return
+
+##########################################
+# ls *
+##########################################
+
 async def ls_all(message):
 
     # get correlative, define title, init files list
@@ -181,9 +207,9 @@ async def ls_all(message):
         for discussion in discussions:
             files.append(discussion)
 
-    # check for empty search result
+    # check for empty result
     if files == []:
-        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
+        await message.reply(f'Sorry, but your attempt to list did not return any results :/')
         return
 
     # chunk and send as embed object

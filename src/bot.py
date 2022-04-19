@@ -60,6 +60,8 @@ async def on_message(message):
     # list correlative directories
     if (message.content == 'kb ls *'):
         await command.ls_all(message)
+    elif (message.content == 'kb ls'):
+        await command.ls(message)
     elif (message.content == 'kb ls '):
         await manpage.ls_list(message)
     # manpage help
