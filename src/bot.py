@@ -54,6 +54,8 @@ async def on_message(message):
         message.content == 'kb cat --help'):
         await manpage.cat_help(message)
     # command exec
+    elif message.content.startswith('kb cat discuss/'):
+        await discuss.cat_discuss(message)
     elif (message.content.startswith('kb cat ')):
         await command.cat(message)
 

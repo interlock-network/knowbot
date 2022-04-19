@@ -421,42 +421,131 @@ async def grep_discuss(message, keyphrase, reply):
 # cat discuss
 ##########################################
 
+async def cat_discuss(message):
 
+    # get keyphrase, define title, init files list
+    resultlines: list = []
+    keyphrase = message.content.replace('kb cat discuss/', '')
+    title = f'kb cat \'{keyphrase}\''
+    body = []
 
-
-"""
-
-# cat discussion command
-async def ls_discussions(message):
-
-    # define title, and discussions list
-    title = f'kb ls discussions '
-    discussions = []
     
-    # get file contents and return error if no file or directory exists
+    # define query variables
+    variables = {
+        'owner': utility.org,
+        'reponame': utility.repo,
+    }
+
+    # get first 100 (max) discussions
+    # ls graphql query
+    ls = """
+        query($owner: String!, $reponame: String!) {
+            repository(owner: $owner, name: $reponame) {
+                discussions(first: 100) {
+                    totalCount
+                    pageInfo {
+                        endCursor
+                    }
+                    nodes {
+                        body
+                        title
+                        url
+                    }
+                }
+            }
+        }
+    """
+
+    # package final query json for ls command
+    json_ls = {
+        'query': ls,
+        'variables': variables,
+    }
+
+    # get discussion contents and return error if no file or directory exists
     try:
         # get discussion titles and urls
         querydata = requests.post(url=url, json=json_ls, headers=headers)
     except:
         await message.reply('I couldn\'t get the discussions you requested from the repository.')
+        print('chirp')
         return
 
     # parse returned discussions json
     totalcount = querydata.json()['data']['repository']['discussions']['totalCount']
-    querydata = querydata.json()['data']['repository']['discussions']['nodes']
-
+    querydata = querydata.json()['data']['repository']['discussions']
     
-    for discussion in querydata:
-        discussions.append(f'[{discussion["title"]}]({discussion["url"]})')
+    # continue building list discussion title list
+    for discussion in querydata['nodes']:
+        if discussion['title'].lower() == keyphrase.lower():
+            body = discussion['body']
 
-    # add segment to process >100 discussions here
-    # i = 100
-    # while i < totalcount:
+    # new ls graphql query with cursor
+    ls = """
+        query($owner: String!, $reponame: String!, $cursor: String!) {
+            repository(owner: $owner, name: $reponame) {
+                discussions(first: 100, after: $cursor) {
+                    totalCount
+                    pageInfo {
+                        endCursor
+                    }
+                    nodes {
+                        body
+                        title 
+                        url
+                    }
+                }
+            }
+        }
+    """
 
+    # if discussion count >100, resume query at last cursor until reach totalcount
+    count = 100
+    while count < totalcount:
 
-    # chunk and send as embed object
-    await utility.embed_reply(message, discussions, title)
+        # redefine query variables to include cursor to get next page of 100 discussions
+        variables = {
+            'owner': utility.org,
+            'reponame': utility.repo,
+            'cursor': querydata['pageInfo']['endCursor']
+        } 
 
-    return
-"""
+        # build new json object
+        json_ls = {
+            'query': ls,
+            'variables': variables,
+        }
 
+        # get discussion contents and return error if no file or directory exists
+        try:
+            # get discussion titles and urls
+            querydata = requests.post(url=url, json=json_ls, headers=headers)
+        except:
+            await message.reply('I couldn\'t get the discussions you requested from the repository.')
+            return
+
+        # parse returned discussions json
+        querydata = querydata.json()['data']['repository']['discussions']
+
+        # continue building list discussion title list
+        for discussion in querydata['nodes']:
+            if discussion['title'].lower() == keyphrase.lower():
+                body = discussion['body']
+
+        count += 100
+
+    # check for empty search result
+    if body == []:
+        await message.reply(f'Sorry, but I could not find the discussion you specified.')
+        return
+
+    lines = body.splitlines()
+    i = 0
+    for line in lines:
+        lines[i] = utility.cleanup_markdown(line)
+        i += 1
+
+    # if called directly by bot.py, reply to message with embed object
+    await utility.embed_reply(message, lines, title)
+    
+    return resultlines
