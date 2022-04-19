@@ -75,6 +75,8 @@ async def on_message(message):
     # command exec
     elif (message.content == 'kb ls discuss'):
         await discuss.ls_discuss(message, '', True)
+    elif (message.content.startswith('kb ls discuss | grep ')):
+        await discuss.ls_discuss_grep(message)
     elif (message.content.startswith('kb ls ') and
         not message.content.__contains__(' | grep ')):
         await command.ls_directory(message)
@@ -82,7 +84,8 @@ async def on_message(message):
     # check for ls command to grep directory contents list
     # pipe grep directories ls from specific correlative
     head, delimit, tail = message.content.replace('kb ls ', '').partition('| grep ')
-    if (not head == '' and message.content.__contains__(' | grep ')):
+    if (not head == '' and message.content.__contains__(' | grep ') and
+            not message.content.startswith('kb ls discuss | grep ')):
         await command.ls_correl_grep(message)
 
     # check for ls command to grep all contents list
