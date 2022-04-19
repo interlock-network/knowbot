@@ -62,6 +62,7 @@ async def ls_discuss(message, keyphrase, reply):
                     nodes {
                         title 
                         url
+                        number
                     }
                 }
             }
@@ -90,9 +91,9 @@ async def ls_discuss(message, keyphrase, reply):
     for discussion in querydata['nodes']:
         if (not reply and not keyphrase == ''):
             if discussion['title'].lower().__contains__(keyphrase.lower()):
-                discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
+                discussions.append(f'[discuss/{discussion["number"]} ...{discussion["title"]}]({discussion["url"]})')
         else:
-            discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
+            discussions.append(f'[discuss/{discussion["number"]} ...{discussion["title"]}]({discussion["url"]})')
 
     # new ls graphql query with cursor
     ls = """
@@ -106,6 +107,7 @@ async def ls_discuss(message, keyphrase, reply):
                     nodes {
                         title 
                         url
+                        number
                     }
                 }
             }
@@ -144,9 +146,9 @@ async def ls_discuss(message, keyphrase, reply):
         for discussion in querydata['nodes']:
             if (not reply and not keyphrase == ''):
                 if discussion['title'].lower().__contains__(keyphrase.lower()):
-                    discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
+                    discussions.append(f'[discuss/{discussion["number"]} ...{discussion["title"]}]({discussion["url"]})')
             else:
-                discussions.append(f'[discuss/{discussion["title"]}]({discussion["url"]})')
+                discussions.append(f'[discuss/{discussion["number"]} ...{discussion["title"]}]({discussion["url"]})')
 
         count += 100
 
@@ -426,8 +428,9 @@ async def cat_discuss(message):
     # get keyphrase, define title, init files list
     resultlines: list = []
     keyphrase = message.content.replace('kb cat discuss/', '')
-    title = f'kb cat \'{keyphrase}\''
+    title = f'kb cat \'discuss/{keyphrase}\' '
     body = []
+    lines: list = []
 
     
     # define query variables
@@ -450,6 +453,7 @@ async def cat_discuss(message):
                         body
                         title
                         url
+                        number
                     }
                 }
             }
@@ -461,6 +465,7 @@ async def cat_discuss(message):
         'query': ls,
         'variables': variables,
     }
+
 
     # get discussion contents and return error if no file or directory exists
     try:
@@ -476,9 +481,15 @@ async def cat_discuss(message):
     querydata = querydata.json()['data']['repository']['discussions']
     
     # continue building list discussion title list
+    discussion_title = ''
+    discussion_url = ''
     for discussion in querydata['nodes']:
-        if discussion['title'].lower() == keyphrase.lower():
+        if str(discussion['number']) == keyphrase:
             body = discussion['body']
+            discussion_title = discussion['title']
+            discussion_url = discussion['url']
+            print(discussion_title)
+            print(discussion_url)
 
     # new ls graphql query with cursor
     ls = """
@@ -493,6 +504,7 @@ async def cat_discuss(message):
                         body
                         title 
                         url
+                        number
                     }
                 }
             }
@@ -529,7 +541,7 @@ async def cat_discuss(message):
 
         # continue building list discussion title list
         for discussion in querydata['nodes']:
-            if discussion['title'].lower() == keyphrase.lower():
+            if discussion['number'] == keyphrase:
                 body = discussion['body']
 
         count += 100
@@ -539,6 +551,8 @@ async def cat_discuss(message):
         await message.reply(f'Sorry, but I could not find the discussion you specified.')
         return
 
+    strings = [f'**[{discussion_title}]({discussion_url})**', body]
+    body = '\n'.join(strings)
     lines = body.splitlines()
     i = 0
     for line in lines:
