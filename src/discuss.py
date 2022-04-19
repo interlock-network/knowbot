@@ -309,7 +309,7 @@ async def grep_discuss(message, keyphrase, reply):
 
     # get first 100 (max) discussions
     # ls graphql query
-    ls = """
+    ls_discussion = """
         query($owner: String!, $reponame: String!) {
             repository(owner: $owner, name: $reponame) {
                 discussions(first: 100) {
@@ -321,6 +321,7 @@ async def grep_discuss(message, keyphrase, reply):
                         body
                         title
                         url
+                        number
                     }
                 }
             }
@@ -329,7 +330,7 @@ async def grep_discuss(message, keyphrase, reply):
 
     # package final query json for ls command
     json_ls = {
-        'query': ls,
+        'query': ls_discussion,
         'variables': variables,
     }
 
@@ -350,10 +351,10 @@ async def grep_discuss(message, keyphrase, reply):
         lines = discussion['body'].splitlines()
         for line in lines:
             if line.lower().__contains__(keyphrase.lower()):
-                resultlines.append(f'[discuss/{discussion["title"]}]({discussion["url"]}): {line}')
+                resultlines.append(f'[discuss/{discussion["number"]} ...{discussion["title"]}]({discussion["url"]}): {line}')
 
     # new ls graphql query with cursor
-    ls = """
+    ls_discussion = """
         query($owner: String!, $reponame: String!, $cursor: String!) {
             repository(owner: $owner, name: $reponame) {
                 discussions(first: 100, after: $cursor) {
@@ -365,6 +366,7 @@ async def grep_discuss(message, keyphrase, reply):
                         body
                         title 
                         url
+                        number
                     }
                 }
             }
@@ -384,7 +386,7 @@ async def grep_discuss(message, keyphrase, reply):
 
         # build new json object
         json_ls = {
-            'query': ls,
+            'query': ls_discussion,
             'variables': variables,
         }
 
@@ -404,7 +406,7 @@ async def grep_discuss(message, keyphrase, reply):
             lines = discussion['body'].splitlines()
             for line in lines:
                 if line.lower().__contains__(keyphrase.lower()):
-                    resultlines.append(f'[discuss/{discussion["title"]}]({discussion["url"]}): {line}')
+                    resultlines.append(f'[discuss/{discussion["number"]} ...{discussion["title"]}]({discussion["url"]}): {line}')
         count += 100
 
     # check for empty search result
@@ -551,7 +553,8 @@ async def cat_discuss(message):
         await message.reply(f'Sorry, but I could not find the discussion you specified.')
         return
 
-    strings = [f'**[{discussion_title}]({discussion_url})**', body]
+    strings = ['_For the full discussion, please click the Title link below._',
+            f'**[{discussion_title}]({discussion_url})**', body]
     body = '\n'.join(strings)
     lines = body.splitlines()
     i = 0
