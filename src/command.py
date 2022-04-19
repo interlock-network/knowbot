@@ -86,6 +86,53 @@ async def grep_all(message):
     return
 
 ##########################################
+# grep <keyphrase> <correl>
+##########################################
+
+async def grep_correl(message):
+
+    # get keyphrase, define title, init files list
+    resultlines: list = []
+    keyphrase = message.content.replace('kb grep ', '').replace(message.content.split()[-1], '').strip()
+    correl = message.content.split()[-1]
+    title = f'kb grep \'{keyphrase}\' \'{correl}\''
+
+    # reject empty search term
+    if keyphrase == '':
+        await message.reply(f'A blank search term will return way too many results. You need to actually search for something.')
+        return
+
+    # get file contents and return error if no file or directory exists
+    try:
+        for content in kb.get_contents(correl):
+
+            # get decoded lines
+            lines = content.decoded_content.splitlines()
+
+            for line in lines:
+                if str(line.lower()).__contains__(keyphrase.lower()):
+
+                    # cleanup line
+                    line = utility.cleanup_markdown(line)
+
+                    # condition and add to results
+                    resultlines.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name}): {line}')
+
+    except:
+        await message.reply('I couldn\'t get what you requested from the repository.')
+        return
+
+    # check for empty search result
+    if resultlines == []:
+        await message.reply(f'Sorry, but your search for _{keyphrase}_ did not return any results :/')
+        return
+
+    # chunk and send as embed object
+    await utility.embed_reply(message, resultlines, title)
+
+    return
+
+##########################################
 # ls | grep <keyphrase>
 ##########################################
 

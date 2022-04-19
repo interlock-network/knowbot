@@ -16,6 +16,7 @@
 import manpage
 import command
 import discuss
+import utility
 
 # include others
 import os
@@ -64,6 +65,7 @@ async def on_message(message):
         await command.ls(message)
     elif (message.content == 'kb ls '):
         await manpage.ls_list(message)
+
     # manpage help
     elif (message.content == 'kb ls help'):
         await manpage.ls_help(message)
@@ -96,6 +98,11 @@ async def on_message(message):
     elif (message.content.startswith('kb grep ') and
         message.content.endswith(' discuss')):
         await discuss.grep_discuss(message, '', True)
+    try:
+        if (message.content.replace('kb grep ', '').split()[-1] in utility.correl):
+            await command.grep_correl(message)
+    except IndexError:
+        pass
 
 ##########################################
 # main
