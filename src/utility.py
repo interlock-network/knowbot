@@ -1,6 +1,6 @@
 ##########################################
 #
-# INTERLOCK KNOWLEDGEBASE DISCORD BOT
+# INTERLOCK KNOWBOT (KNOWLEDGEBASE) DISCORD BOT
 # utility.py
 #
 ##########################################
@@ -8,17 +8,31 @@
 # TODO
 
 ##########################################
+# configure
+##########################################
+
+# TO CONFIGURE THIS KNOWBOT,
+# REFER TO utility.py
+
+# define repository
+organization = 'interlock-network' # OR USER
+repository = 'interlock-kb'
+
+# define repository command
+# example, for repository called
+# 'knowledgebase', us 'kb'
+repo = 'kb'
+
+##########################################
 # setup
 #########################################
 
+# form repository URL strings
+repolong = organization + '/' + repository
+repofull = 'https://github.com/' + repolong
+
 ## include
 import discord
-
-# define repo
-org = 'interlock-network'
-repo = 'interlock-kb'
-repolong = org + '/' + repo
-repofull = 'https://github.com/' + repolong
 
 ##########################################
 # break long string into chunks

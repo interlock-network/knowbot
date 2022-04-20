@@ -1,14 +1,16 @@
 ##########################################
 #
-# INTERLOCK KNOWLEDGEBASE DISCORD BOT
+# INTERLOCK KNOWBOT (KNOWLEDGEBASE) DISCORD BOT
 # command.py
 #
 ##########################################
 
-# TODO
-# . create ls *
-# . create grep for each correlative
-# . create ls
+##########################################
+# configure
+##########################################
+
+# TO CONFIGURE THIS KNOWBOT,
+# REFER TO utility.py
 
 ##########################################
 # setup
@@ -25,15 +27,17 @@ import requests
 from dotenv import load_dotenv
 from github import Github
 
-# PAT from blairmunroakusa for dev purposes
-# scope restricted to only access public repo info
+# personal access token generated for repository by user or org owner
 load_dotenv()
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 g = Github(GITHUB_TOKEN)
 
 # define and get repo
-kb = g.get_repo(utility.repolong)
+repository = g.get_repo(utility.repolong)
 repofull = utility.repofull
+
+# define repo command from utility.py
+repo = utility.repo
 
 ##########################################
 # grep <keyphrase> *
@@ -43,13 +47,13 @@ async def grep_all(message):
 
     # get keyphrase, define title, init files list
     resultlines: list = []
-    keyphrase = message.content.replace('kb grep ', '').replace(' *', '')
-    title = f'kb grep \'{keyphrase}\' '
+    keyphrase = message.content.replace(f'{repo} grep ', '').replace(' *', '')
+    title = f'{repo} grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
     try:
         for correl in utility.correl:
-            for content in kb.get_contents(correl):
+            for content in repository.get_contents(correl):
 
                 # get decoded lines
                 lines = content.decoded_content.splitlines()
@@ -93,9 +97,9 @@ async def grep_correl(message):
 
     # get keyphrase, define title, init files list
     resultlines: list = []
-    keyphrase = message.content.replace('kb grep ', '').replace(message.content.split()[-1], '').strip()
+    keyphrase = message.content.replace(f'{repo} grep ', '').replace(message.content.split()[-1], '').strip()
     correl = message.content.split()[-1]
-    title = f'kb grep \'{keyphrase}\' \'{correl}\''
+    title = f'{repo} grep \'{keyphrase}\' \'{correl}\''
 
     # reject empty search term
     if keyphrase == '':
@@ -104,7 +108,7 @@ async def grep_correl(message):
 
     # get file contents and return error if no file or directory exists
     try:
-        for content in kb.get_contents(correl):
+        for content in repository.get_contents(correl):
 
             # get decoded lines
             lines = content.decoded_content.splitlines()
@@ -140,13 +144,13 @@ async def ls_grep(message):
 
     # get keyphrase, define title, init files list
     files: list = []
-    keyphrase = message.content.replace('kb ls | grep ', '')
-    title = f'kb ls | grep \'{keyphrase}\' '
+    keyphrase = message.content.replace(f'{repo} ls | grep ', '')
+    title = f'{repo} ls | grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
     try:
         for correl in utility.correl:
-            for content in kb.get_contents(correl):
+            for content in repository.get_contents(correl):
                 if content.name.lower().__contains__(keyphrase.lower()):
                     files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
@@ -179,12 +183,12 @@ async def ls_correl_grep(message):
 
     # get keyphrase, get correlative, define title, init files list
     files: list = []
-    correl, delimit, keyphrase = message.content.replace('kb ls ', '').partition(' | grep ')
-    title = f'kb ls \'{correl}\' | grep \'{keyphrase}\' '
+    correl, delimit, keyphrase = message.content.replace(f'{repo} ls ', '').partition(' | grep ')
+    title = f'{repo} ls \'{correl}\' | grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
     try:
-        for content in kb.get_contents(correl):
+        for content in repository.get_contents(correl):
             if content.name.lower().__contains__(keyphrase.lower()):
                 files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
@@ -209,11 +213,11 @@ async def ls(message):
 
     # get correlative, define title, init files list
     files: list = []
-    title = f'kb ls'
+    title = f'{repo} ls'
     
     # get file contents and return error if no file or directory exists
     try:
-            for content in kb.get_contents(''):
+            for content in repository.get_contents(''):
                 files.append(f'[{content.name}]({repofull}/{content.name})')
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
@@ -235,12 +239,12 @@ async def ls_all(message):
 
     # get correlative, define title, init files list
     files: list = []
-    title = f'kb ls *'
+    title = f'{repo} ls *'
     
     # get file contents and return error if no file or directory exists
     try:
         for directory in utility.correl:
-            for content in kb.get_contents(directory):
+            for content in repository.get_contents(directory):
                 files.append(f'[{directory}/{content.name}]({repofull}/blob/master/{directory}/{content.name})')
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
@@ -272,12 +276,12 @@ async def ls_directory(message):
 
     # get correlative, define title, init files list
     files: list = []
-    correl = message.content.replace('kb ls ', '')
-    title = f'kb ls \'{correl}\' '
+    correl = message.content.replace(f'{repo} ls ', '')
+    title = f'{repo} ls \'{correl}\' '
     
     # get file contents and return error if no file or directory exists
     try:
-        for content in kb.get_contents(correl):
+        for content in repository.get_contents(correl):
             files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
@@ -300,18 +304,18 @@ async def ls_directory(message):
 async def ls_help(message):
 
     # define title and get filename
-    correl = message.content.strip('kb ls help ')
-    title = f'kb ls help \'{correl}\' '
+    correl = message.content.strip(f'{repo} ls help ')
+    title = f'{repo} ls help \'{correl}\' '
 
     # get file contents and return error if no file or directory exists
     try:
-        kbdata = kb.get_contents(correl + '/README.md')
+        repodata = repository.get_contents(correl + '/README.md')
     except:
         await message.reply('I couldn\'t get what you requested from the repository, or the correlative doesn\'t exist.')
         return
 
-    # decode file contents and return error if input is actually directory
-    content = kbdata.decoded_content
+    # dec de file contents and return error if input is actually directory
+    content = repodata.decoded_content
 
     # put into form that will display lines properly
     lines = content.splitlines()
@@ -334,19 +338,19 @@ async def ls_help(message):
 async def cat(message):
 
     # define title and get filename
-    filename = message.content.strip('kb cat ')
-    title = f'kb cat \'{filename}\' '
+    filename = message.content.strip(f'{repo} cat ')
+    title = f'{repo} cat \'{filename}\' '
 
     # get file contents and return error if no file or directory exists
     try:
-        kbdata = kb.get_contents(filename)
+        repodata = repository.get_contents(filename)
     except:
         await message.reply('I couldn\'t get what you requested from the repository, or the file doesn\'t exist.')
         return
 
     # decode file contents and return error if input is actually directory
     try:
-        content = kbdata.decoded_content
+        content = repodata.decoded_content
     except:
         await message.reply(f'\'{filename}\' is actually a directory, nothing to print.')
         return

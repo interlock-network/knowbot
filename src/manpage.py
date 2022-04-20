@@ -1,35 +1,50 @@
 ##########################################
 #
-# INTERLOCK KNOWLEDGEBASE DISCORD BOT
+# INTERLOCK KNOWBOT (KNOWLEDGEBASE) DISCORD BOT
 # manpage.py
 #
 ##########################################
 
+##########################################
+# configure
+##########################################
+
+# TO CONFIGURE THIS KNOWBOT,
+# REFER TO utility.py
+
+##########################################
+# setup
+##########################################
+
 # include others
 import discord
+import utility
+
+# define repo command from utility.py
+repo = utility.repo
 
 ##########################################
 # ls list options
 ##########################################
 
 async def ls_list(message):
-    output = """
+    output = f"""
 CHOOSE A CORRELATIVE LIKE SO
-    kb ls how-many
-    kb ls how
-    kb ls what-kind-of
-    kb ls what
-    kb ls when
-    kb ls where
-    kb ls which
-    kb ls whither
-    kb ls who
-    kb ls whose
-    kb ls why
-    kb ls help
+    {repo} ls how-many
+    {repo} ls how
+    {repo} ls what-kind-of
+    {repo} ls what
+    {repo} ls when
+    {repo} ls where
+    {repo} ls which
+    {repo} ls whither
+    {repo} ls who
+    {repo} ls whose
+    {repo} ls why
+    {repo} ls help
 """
     embed = discord.Embed(
-        title = f"KB LS",
+        title = f"{repo.upper()} LS",
         description = output,
     )
     await message.reply(embed=embed)
@@ -41,12 +56,12 @@ CHOOSE A CORRELATIVE LIKE SO
 ##########################################
 
 async def ls_help(message):
-    output = """
+    output = f"""
 NAME
-    kb ls - list directory contents
+    {repo} ls - list directory contents
 
 SYNOPSIS
-    kb ls [help] [how-many, how, what-kind-of, what, when, where, which, whither, who, whose, why]
+    {repo} ls [help] [how-many, how, what-kind-of, what, when, where, which, whither, who, whose, why]
 
 DESCRIPTION
     The ls utility displays the names of files in the specified interrogative-correlative.
@@ -56,16 +71,16 @@ DESCRIPTION
 
 EXAMPLES
     List the contents of the 'what' category:
-        kb ls what
+        {repo} ls what
 
     List the contents of the 'why' category:
-        kb ls why
+        {repo} ls why
 
     Display a description of the 'how' category:
-        kb ls help how
+        {repo} ls help how
 """
     embed = discord.Embed(
-        title = f"KB LS    General Commands Manual",
+        title = f"{repo.upper()} LS    General Commands Manual",
         description = output,
     )
     await message.reply(embed=embed)
@@ -76,23 +91,23 @@ EXAMPLES
 ##########################################
 
 async def cat_help(message):
-    output = """
+    output = f"""
 NAME
-    kb cat - contatenate and print files
+    {repo} cat - contatenate and print files
 
 SYNOPSIS
-    kb cat [help] [file]
+    {repo} cat [help] [file]
 
 DESCRIPTION
     The cat utility reads text or markdown files, writing them to chat. Replies are broken into 2000 character chunks, and this might interfere with markdown formatting, or it might cause a line to be broken in an awkward place. Relative markdown links have been replaced by the absolute url. To prevent previews for all links in chat, the '<' is prepended to each address.
 
 EXAMPLE
     The command:
-        kb cat file1.md
+        {repo} cat file1.md
     will print the contents of file1.md to chat.
 """
     embed = discord.Embed(
-        title = f"KB CAT    General Commands Manual",
+        title = f"{repo.upper()} CAT    General Commands Manual",
         description = output,
     )
     await message.reply(embed=embed)

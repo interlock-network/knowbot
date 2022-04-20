@@ -1,6 +1,6 @@
 ##########################################
 #
-# INTERLOCK KNOWLEDGEBASE DISCORD BOT
+# INTERLOCK KNOWBOT (KNOWLEDGEBASE) DISCORD BOT
 # discuss.py
 #
 ##########################################
@@ -9,6 +9,13 @@
 # . include comments in grep discuss
 # . create cat for discussion main entry
 # .
+
+##########################################
+# configure
+##########################################
+
+# TO CONFIGURE THIS KNOWBOT,
+# REFER TO utility.py
 
 ##########################################
 # setup
@@ -33,6 +40,9 @@ url = 'https://api.github.com/graphql'
 api_token = GITHUB_TOKEN
 headers = {'Authorization': f'token {api_token}' }
 
+# define repo command from utility.py
+repo = utility.repo
+
 ##########################################
 # ls discuss
 ##########################################
@@ -40,13 +50,13 @@ headers = {'Authorization': f'token {api_token}' }
 async def ls_discuss(message, keyphrase, reply):
 
     # define title, and discussions list
-    title = f'kb ls discuss '
+    title = f'{repo} ls discuss '
     discussions = []
     
     # define query variables
     variables = {
-        'owner': utility.org,
-        'reponame': utility.repo,
+        'owner': utility.organization,
+        'reponame': utility.repository,
     }
 
     # get first 100 (max) discussions
@@ -120,8 +130,8 @@ async def ls_discuss(message, keyphrase, reply):
 
         # redefine query variables to include cursor to get next page of 100 discussions
         variables = {
-            'owner': utility.org,
-            'reponame': utility.repo,
+            'owner': utility.organization,
+            'reponame': utility.repository,
             'cursor': querydata['pageInfo']['endCursor']
         } 
 
@@ -171,14 +181,14 @@ async def ls_discuss(message, keyphrase, reply):
 async def ls_discuss_grep(message):
 
     # define title, and discussions list
-    keyphrase = message.content.replace('kb ls discuss | grep ', '')
-    title = f'kb ls discuss | grep \'{keyphrase}\''
+    keyphrase = message.content.replace(f'{repo} ls discuss | grep ', '')
+    title = f'{repo} ls discuss | grep \'{keyphrase}\''
     discussions = []
     
     # define query variables
     variables = {
-        'owner': utility.org,
-        'reponame': utility.repo,
+        'owner': utility.organization,
+        'reponame': utility.repository,
     }
 
     # get first 100 (max) discussions
@@ -247,8 +257,8 @@ async def ls_discuss_grep(message):
 
         # redefine query variables to include cursor to get next page of 100 discussions
         variables = {
-            'owner': utility.org,
-            'reponame': utility.repo,
+            'owner': utility.organization,
+            'reponame': utility.repository,
             'cursor': querydata['pageInfo']['endCursor']
         } 
 
@@ -295,16 +305,16 @@ async def grep_discuss(message, keyphrase, reply):
     # get keyphrase, define title, init files list
     resultlines: list = []
     if reply:
-        keyphrase = message.content.replace('kb grep ', '').replace(' discuss', '')
+        keyphrase = message.content.replace(f'{repo} grep ', '').replace(' discuss', '')
     else:
-        keyphrase = message.content.replace('kb grep ', '').replace(' *', '')
-    title = f'kb grep \'{keyphrase}\' discuss '
+        keyphrase = message.content.replace(f'{repo} grep ', '').replace(' *', '')
+    title = f'{repo} grep \'{keyphrase}\' discuss '
 
     
     # define query variables
     variables = {
-        'owner': utility.org,
-        'reponame': utility.repo,
+        'owner': utility.organization,
+        'reponame': utility.repository,
     }
 
     # get first 100 (max) discussions
@@ -379,8 +389,8 @@ async def grep_discuss(message, keyphrase, reply):
 
         # redefine query variables to include cursor to get next page of 100 discussions
         variables = {
-            'owner': utility.org,
-            'reponame': utility.repo,
+            'owner': utility.organization,
+            'reponame': utility.repository,
             'cursor': querydata['pageInfo']['endCursor']
         } 
 
@@ -429,16 +439,16 @@ async def cat_discuss(message):
 
     # get keyphrase, define title, init files list
     resultlines: list = []
-    keyphrase = message.content.replace('kb cat discuss/', '')
-    title = f'kb cat \'discuss/{keyphrase}\' '
+    keyphrase = message.content.replace(f'{repo} cat discuss/', '')
+    title = f'{repo} cat \'discuss/{keyphrase}\' '
     body = []
     lines: list = []
 
     
     # define query variables
     variables = {
-        'owner': utility.org,
-        'reponame': utility.repo,
+        'owner': utility.organization,
+        'reponame': utility.repository,
     }
 
     # get first 100 (max) discussions
@@ -519,8 +529,8 @@ async def cat_discuss(message):
 
         # redefine query variables to include cursor to get next page of 100 discussions
         variables = {
-            'owner': utility.org,
-            'reponame': utility.repo,
+            'owner': utility.organization,
+            'reponame': utility.repository,
             'cursor': querydata['pageInfo']['endCursor']
         } 
 
