@@ -9,8 +9,8 @@
 # configure
 ##########################################
 
-# TO CONFIGURE THIS KNOWBOT,
-# REFER TO utility.py
+# To configure this Knowbot,
+# please REFER to the utility.py configuration section.
 
 ##########################################
 # setup
@@ -108,6 +108,74 @@ EXAMPLE
 """
     embed = discord.Embed(
         title = f"{repo.upper()} CAT    General Commands Manual",
+        description = output,
+    )
+    await message.reply(embed=embed)
+    return
+
+##########################################
+# display main help page
+##########################################
+
+async def help(message):
+
+    output = f"""
+Knowbot is a Discord bot that connects to a github knowledgebase repository, and emulates a _Linux bash terminal_ in a Discord channel, or direct message with Knowbot itself.
+
+This particular knowbot is connected to the **{utility.repository}** repository, owned by **{utility.organization}**.
+
+To use knowbot on this directory '**{repo}**' is the command that indicates to knowbot you would like to interact with **{utility.repository}**.
+
+**Please type the following commands to learn how to use Knowbot:**
+
+knowbot commands
+knowbot examples
+
+Or visit the [README here](https://github.com/interlock-network/knowbot/README.md)
+
+"""
+
+
+    embed = discord.Embed(
+        title = f"HOW TO USE KNOWBOT FOR {utility.repository.upper()} REPOSITORY.",
+        description = output,
+    )
+    await message.reply(embed=embed)
+    return
+
+##########################################
+# display commands menu
+##########################################
+
+async def menu(message):
+
+    output = f"""
+This knowbot is configured to work with the **{utility.repository}** reposistory.
+
+Commands:
+
+list all directories in home
+**{repo} ls**
+list all contents of all directories in home
+**{repo} ls ***
+list all contents in specified directory
+**{repo} ls <directory>**
+search for <searchphrase> in all contents
+**{repo} grep <searchphrase> ***
+search of searchphrase in specified directory
+**{repo} grep <searchphrase> <directory>**
+print file contents
+**{repo} cat <directory>/<filename>**
+pipe list all directory contents to search for searchphrase
+**{repo} ls * | grep <searchphrase>**
+pipe list contents of specific directory to search for searchphrase
+**{repo} ls <directory> | grep <searchphrase>**
+
+"""
+
+
+    embed = discord.Embed(
+        title = f"MENU OF KNOWBOT COMMANDS",
         description = output,
     )
     await message.reply(embed=embed)
