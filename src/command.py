@@ -149,8 +149,8 @@ async def ls_grep(message):
 
     # get keyphrase, define title, init files list
     files: list = []
-    keyphrase = message.content.replace(f'{repo} ls | grep ', '')
-    title = f'{repo} ls | grep \'{keyphrase}\' '
+    keyphrase = message.content.replace(f'{repo} ls * | grep ', '')
+    title = f'{repo} ls * | grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
     try:

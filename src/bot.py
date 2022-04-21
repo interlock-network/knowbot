@@ -69,6 +69,8 @@ async def on_message(message):
 
     # check for command menu command
     elif (message.content == f'{repo} help' or
+        message.content == f'{repo} commands' or
+        message.content == f'{repo} command' or
         message.content == f'knowbot commands' or
         message.content == f'knowbot command'):
         await manpage.menu(message)
@@ -81,7 +83,7 @@ async def on_message(message):
         await manpage.example(message)
     # check for cat command to print file
     # manpage help
-    if (message.content == f'{repo} cat' or
+    elif (message.content == f'{repo} cat' or
         message.content == f'{repo} cat ' or
         message.content == f'{repo} cat help'):
         await manpage.cat_help(message)
@@ -96,7 +98,7 @@ async def on_message(message):
 
     # check for ls command to list directory contents
     # list all contents in knowledgebase
-    if (message.content == f'{repo} ls *'):
+    elif (message.content == f'{repo} ls *'):
         await command.ls_all(message)
 
     # list all directories and contents in repo home
@@ -125,19 +127,19 @@ async def on_message(message):
 
     # list all files in particular directory
     elif (message.content.startswith(f'{repo} ls ') and
-        not message.content.__contains__(' | grep ')):
+        not message.content.__contains__(' * | grep ')):
         await command.ls_directory(message)
 
     # check for ls command to grep directory contents list
     # pipe grep directories ls from specific directory
     head, delimit, tail = message.content.replace(f'{repo} ls ', '').partition('| grep ')
-    if (not head == '' and message.content.__contains__(' | grep ') and
+    if (not head == '* ' and message.content.__contains__(' | grep ') and
         not message.content.startswith(f'{repo} ls discuss | grep ')):
         await command.ls_directory_grep(message)
 
     # check for ls command to grep all contents list
     # pipe grep directories ls from specific directory
-    if message.content.startswith(f'{repo} ls | grep '):
+    if message.content.startswith(f'{repo} ls * | grep '):
         await command.ls_grep(message)
 
     # check for grep command to grep all contents
