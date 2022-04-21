@@ -68,11 +68,17 @@ async def on_message(message):
         await manpage.help(message)
 
     # check for command menu command
-    if (message.content == f'{repo} help' or
+    elif (message.content == f'{repo} help' or
         message.content == f'knowbot commands' or
         message.content == f'knowbot command'):
         await manpage.menu(message)
 
+    # check for examples command
+    elif (message.content == f'{repo} examples' or
+        message.content == f'{repo} example' or
+        message.content == f'knowbot examples' or
+        message.content == f'knowbot example'):
+        await manpage.example(message)
     # check for cat command to print file
     # manpage help
     if (message.content == f'{repo} cat' or

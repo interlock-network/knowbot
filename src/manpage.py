@@ -133,8 +133,9 @@ To use knowbot on this directory '**{repo}**' is the command that indicates to k
 
 **Please type the following commands to learn how to use Knowbot:**
 
-knowbot commands
-knowbot examples
+**knowbot commands** or **{repo} commands**
+**knowbot examples** or **{repo} examples**
+
 
 Or visit the [README here](https://github.com/interlock-network/knowbot/README.md)
 
@@ -176,11 +177,90 @@ pipe list all directory contents to search for searchphrase
 pipe list contents of specific directory to search for searchphrase
 **{repo} ls <directory> | grep <searchphrase>**
 
-"""
+Enter **knowbot examples** or **{repo} examples** for example usage.
 
+"""
 
     embed = discord.Embed(
         title = f"MENU OF KNOWBOT COMMANDS",
+        description = output,
+    )
+    await message.reply(embed=embed)
+    return
+
+##########################################
+# display command examples
+##########################################
+
+async def example(message):
+
+    output = f"""
+Here are use-case examples for each command:
+
+**list all directories in home**
+**{repo} ls**
+
+_{repo} ls_
+... self explanatory
+... **ls** stands for _**l**i**s**t_
+
+**list all contents of all directories in home**
+**{repo} ls ***
+
+_{repo} ls *_
+... for every directory in _{repo} ls_, this will return all the files inside
+... * is a _wildcard_, which basically means _everything_
+
+**list all contents in specified directory**
+**{repo} ls <directory>**
+
+_{repo} ls coolproject_
+... lists all the files (and directories) in the directory _coolproject_
+
+**search for <searchphrase> in all contents**
+**{repo} grep <searchphrase> ***
+
+_{repo} grep racecar *_
+... searches for the word _racecar_ in all files
+... **grep** stands for _**g**lobally search for a **r**egular **e**xpression and **p**rint matching lines_
+!!! WARNING: grep can take a long time.
+!!! If you entered the command right, grep will tell you if it didn't find anything.
+
+**search of searchphrase in specified directory**
+**{repo} grep <searchphrase> <directory>**
+
+_{repo} grep racecar coolproject_
+... searches for the word _racecar_ in the directory _coolproject_
+!!! This will also take a bit longer than other commands
+
+**print file contents**
+**{repo} cat <directory>/<filename>**
+
+_{repo} cat README.md_
+... prints the README file for the {utility.repository} repository
+... **cat** stands for _print and con**cat**onate files_
+... I wouldn't worry about concatonation right now
+_{repo} cat coolproject/formula-one.md_
+... prints _formula-one.md_ file we found in _coolproject_ directory after using **grep**
+!!! to **cat** a listed _discussion_ use _discuss/number_, NOT discussion title
+
+**pipe list all directory contents to search for searchphrase**
+**{repo} ls * | grep <searchphrase>**
+
+_{repo} ls * | grep formula-one_
+... lists all files with the term _formula-one_ in the title
+
+**pipe list contents of specific directory to search for searchphrase**
+**{repo} ls <directory> | grep <searchphrase>**
+
+_{repo} ls coolproject | grep octane_
+... lists all files in _coolproject_ with the word _octane_ in the title
+
+
+"""
+
+    embed = discord.Embed(
+        title = f"KNOWBOT COMMAND EXAMPLES",
         description = output,
     )
     await message.reply(embed=embed)
