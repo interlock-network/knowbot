@@ -1,9 +1,14 @@
+# This is free-as-in-freedom software,
+# protected by the GNU General Public License v3.0
 ##########################################
 #
 # INTERLOCK KNOWBOT (KNOWLEDGEBASE) DISCORD BOT
 # manpage.py
 #
 ##########################################
+# contributors:
+# blairmunroakusa
+#
 
 ##########################################
 # configure

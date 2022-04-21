@@ -1,16 +1,21 @@
+# This is free-as-in-freedom software,
+# protected by the GNU General Public License v3.0
 ##########################################
 #
 # INTERLOCK KNOWBOT (KNOWLEDGEBASE) DISCORD BOT
 # command.py
 #
 ##########################################
+# contributors:
+# blairmunroakusa
+#
 
 ##########################################
 # configure
 ##########################################
 
-# TO CONFIGURE THIS KNOWBOT,
-# REFER TO utility.py
+# To configure this Knowbot,
+# please REFER to the utility.py configuration section.
 
 ##########################################
 # setup
