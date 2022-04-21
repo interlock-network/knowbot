@@ -29,7 +29,7 @@ repo = utility.repo
 
 async def ls_list(message):
     output = f"""
-CHOOSE A CORRELATIVE LIKE SO
+CHOOSE A DIRECTORY LIKE SO
     {repo} ls how-many
     {repo} ls how
     {repo} ls what-kind-of
@@ -64,10 +64,10 @@ SYNOPSIS
     {repo} ls [help] [how-many, how, what-kind-of, what, when, where, which, whither, who, whose, why]
 
 DESCRIPTION
-    The ls utility displays the names of files in the specified interrogative-correlative.
+    The ls utility displays the names of files in the specified directory.
     The following options are available:
 
-    help    Display overview of specified interrogative-correlative.
+    help    Display README of specified directory.
 
 EXAMPLES
     List the contents of the 'what' category:

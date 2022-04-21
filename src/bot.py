@@ -121,14 +121,14 @@ async def on_message(message):
         await command.ls_directory(message)
 
     # check for ls command to grep directory contents list
-    # pipe grep directories ls from specific correlative
+    # pipe grep directories ls from specific directory
     head, delimit, tail = message.content.replace(f'{repo} ls ', '').partition('| grep ')
     if (not head == '' and message.content.__contains__(' | grep ') and
         not message.content.startswith(f'{repo} ls discuss | grep ')):
-        await command.ls_correl_grep(message)
+        await command.ls_directory_grep(message)
 
     # check for ls command to grep all contents list
-    # pipe grep directories ls from specific correlative
+    # pipe grep directories ls from specific directory
     if message.content.startswith(f'{repo} ls | grep '):
         await command.ls_grep(message)
 
@@ -145,9 +145,9 @@ async def on_message(message):
 
     # search through all contents of particular directory
     try:
-        if (message.content.replace(f'{repo} grep ', '').split()[-1] in utility.correl and
+        if (message.content.replace(f'{repo} grep ', '').split()[-1] in utility.directories and
                 not message.content.startswith(f'{repo} ls')):
-            await command.grep_correl(message)
+            await command.grep_directory(message)
     except IndexError:
         pass
 

@@ -11,17 +11,33 @@
 # configure
 ##########################################
 
-# TO CONFIGURE THIS KNOWBOT,
-# REFER TO utility.py
+# change the three variables below, and make the
+# list match your repository's directories
 
-# define repository
+# define repository and organization
 organization = 'interlock-network' # OR USER
 repository = 'interlock-kb'
 
 # define repository command
-# example, for repository called
-# 'knowledgebase', us 'kb'
+#
+# for example, for repository called
+# 'knowledgebase', use 'kb'
 repo = 'kb'
+
+# list of directories in repository
+directories = [
+        'how-many',
+        'how',
+        'what-kind-of',
+        'what',
+        'when',
+        'where',
+        'which',
+        'whither',
+        'who',
+        'whose',
+        'why',
+        ]
 
 ##########################################
 # setup
@@ -141,18 +157,4 @@ def cleanup_markdown(line):
 
     return line
 
-##########################################
-# list of correlatives
-##########################################
 
-correl = ['how-many',
-        'how',
-        'what-kind-of',
-        'what',
-        'when',
-        'where',
-        'which',
-        'whither',
-        'who',
-        'whose',
-        'why']

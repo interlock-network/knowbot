@@ -52,8 +52,8 @@ async def grep_all(message):
 
     # get file contents and return error if no file or directory exists
     try:
-        for correl in utility.correl:
-            for content in repository.get_contents(correl):
+        for directory in utility.directories:
+            for content in repository.get_contents(directory):
 
                 # get decoded lines
                 lines = content.decoded_content.splitlines()
@@ -65,7 +65,7 @@ async def grep_all(message):
                         line = utility.cleanup_markdown(line)
 
                         # condition and add to results
-                        resultlines.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name}): {line}')
+                        resultlines.append(f'[{directory}/{content.name}]({repofull}/blob/master/{directory}/{content.name}): {line}')
 
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
@@ -90,16 +90,16 @@ async def grep_all(message):
     return
 
 ##########################################
-# grep <keyphrase> <correl>
+# grep <keyphrase> <directory>
 ##########################################
 
-async def grep_correl(message):
+async def grep_directory(message):
 
     # get keyphrase, define title, init files list
     resultlines: list = []
     keyphrase = message.content.replace(f'{repo} grep ', '').replace(message.content.split()[-1], '').strip()
-    correl = message.content.split()[-1]
-    title = f'{repo} grep \'{keyphrase}\' \'{correl}\''
+    directory = message.content.split()[-1]
+    title = f'{repo} grep \'{keyphrase}\' \'{directory}\''
 
     # reject empty search term
     if keyphrase == '':
@@ -108,7 +108,7 @@ async def grep_correl(message):
 
     # get file contents and return error if no file or directory exists
     try:
-        for content in repository.get_contents(correl):
+        for content in repository.get_contents(directory):
 
             # get decoded lines
             lines = content.decoded_content.splitlines()
@@ -120,7 +120,7 @@ async def grep_correl(message):
                     line = utility.cleanup_markdown(line)
 
                     # condition and add to results
-                    resultlines.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name}): {line}')
+                    resultlines.append(f'[{directory}/{content.name}]({repofull}/blob/master/{directory}/{content.name}): {line}')
 
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
@@ -149,10 +149,10 @@ async def ls_grep(message):
 
     # get file contents and return error if no file or directory exists
     try:
-        for correl in utility.correl:
-            for content in repository.get_contents(correl):
+        for directory in utility.directories:
+            for content in repository.get_contents(directory):
                 if content.name.lower().__contains__(keyphrase.lower()):
-                    files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
+                    files.append(f'[{directory}/{content.name}]({repofull}/blob/master/{directory}/{content.name})')
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
         return
@@ -176,21 +176,21 @@ async def ls_grep(message):
     return
 
 ##########################################
-# ls <correlative> | grep <keyphrase>
+# ls <directory> | grep <keyphrase>
 ##########################################
 
-async def ls_correl_grep(message):
+async def ls_directory_grep(message):
 
-    # get keyphrase, get correlative, define title, init files list
+    # get keyphrase, get directory, define title, init files list
     files: list = []
-    correl, delimit, keyphrase = message.content.replace(f'{repo} ls ', '').partition(' | grep ')
-    title = f'{repo} ls \'{correl}\' | grep \'{keyphrase}\' '
+    directory, delimit, keyphrase = message.content.replace(f'{repo} ls ', '').partition(' | grep ')
+    title = f'{repo} ls \'{directory}\' | grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
     try:
-        for content in repository.get_contents(correl):
+        for content in repository.get_contents(directory):
             if content.name.lower().__contains__(keyphrase.lower()):
-                files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
+                files.append(f'[{directory}/{content.name}]({repofull}/blob/master/{directory}/{content.name})')
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
         return
@@ -211,7 +211,7 @@ async def ls_correl_grep(message):
 
 async def ls(message):
 
-    # get correlative, define title, init files list
+    # define title, init files list
     files: list = []
     title = f'{repo} ls'
     
@@ -237,13 +237,13 @@ async def ls(message):
 
 async def ls_all(message):
 
-    # get correlative, define title, init files list
+    # define title, init files list
     files: list = []
     title = f'{repo} ls *'
     
     # get file contents and return error if no file or directory exists
     try:
-        for directory in utility.correl:
+        for directory in utility.directories:
             for content in repository.get_contents(directory):
                 files.append(f'[{directory}/{content.name}]({repofull}/blob/master/{directory}/{content.name})')
     except:
@@ -269,20 +269,20 @@ async def ls_all(message):
     return
 
 ##########################################
-# ls <correlative>
+# ls <directory>
 ##########################################
 
 async def ls_directory(message):
 
-    # get correlative, define title, init files list
+    # get directory, define title, init files list
     files: list = []
-    correl = message.content.replace(f'{repo} ls ', '')
-    title = f'{repo} ls \'{correl}\' '
+    directory = message.content.replace(f'{repo} ls ', '')
+    title = f'{repo} ls \'{directory}\' '
     
     # get file contents and return error if no file or directory exists
     try:
-        for content in repository.get_contents(correl):
-            files.append(f'[{correl}/{content.name}]({repofull}/blob/master/{correl}/{content.name})')
+        for content in repository.get_contents(directory):
+            files.append(f'[{directory}/{content.name}]({repofull}/blob/master/{directory}/{content.name})')
     except:
         await message.reply('I couldn\'t get what you requested from the repository.')
         return
@@ -298,20 +298,20 @@ async def ls_directory(message):
     return
 
 ##########################################
-# ls help <correlative>
+# ls help <directory>
 ##########################################
 
 async def ls_help(message):
 
     # define title and get filename
-    correl = message.content.strip(f'{repo} ls help ')
-    title = f'{repo} ls help \'{correl}\' '
+    directory = message.content.strip(f'{repo} ls help ')
+    title = f'{repo} ls help \'{directory}\' '
 
     # get file contents and return error if no file or directory exists
     try:
-        repodata = repository.get_contents(correl + '/README.md')
+        repodata = repository.get_contents(directory + '/README.md')
     except:
-        await message.reply('I couldn\'t get what you requested from the repository, or the correlative doesn\'t exist.')
+        await message.reply('I couldn\'t get what you requested from the repository, or the directory doesn\'t exist.')
         return
 
     # dec de file contents and return error if input is actually directory
