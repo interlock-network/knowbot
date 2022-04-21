@@ -20,7 +20,7 @@
 
 [discord](https://pypi.org/project/python-discord/)
 
-[github](https://pygithub.readthedocs.io/en/latest/index.html)
+[pygithub](https://pygithub.readthedocs.io/en/latest/index.html)
 
 [dotenv](https://pypi.org/project/python-dotenv/)
 
