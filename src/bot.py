@@ -1,5 +1,6 @@
 # This is free-as-in-freedom software,
 # protected by the GNU General Public License v3.0
+# license copyright (C) of the Free Software Foundation
 ##########################################
 #
 # INTERLOCK KNOWBOT (KNOWLEDGEBASE) DISCORD BOT
@@ -127,7 +128,8 @@ async def on_message(message):
 
     # list all files in particular directory
     elif (message.content.startswith(f'{repo} ls ') and
-        not message.content.__contains__(' * | grep ')):
+        not message.content.__contains__(' * | grep ') and
+        not message.content.__contains__(' | grep ')):
         await command.ls_directory(message)
 
     # check for ls command to grep directory contents list

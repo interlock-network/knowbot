@@ -1,9 +1,10 @@
 # This is free-as-in-freedom software,
 # protected by the GNU General Public License v3.0
+# license copyright (C) of the Free Software Foundation
 ##########################################
 #
 # INTERLOCK KNOWBOT (KNOWLEDGEBASE) DISCORD BOT
-# command.py
+# bot.py
 #
 ##########################################
 # contributors:
@@ -142,7 +143,7 @@ async def grep_directory(message):
     return
 
 ##########################################
-# ls | grep <keyphrase>
+# ls * | grep <keyphrase>
 ##########################################
 
 async def ls_grep(message):

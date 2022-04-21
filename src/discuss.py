@@ -1,9 +1,10 @@
 # This is free-as-in-freedom software,
 # protected by the GNU General Public License v3.0
+# license copyright (C) of the Free Software Foundation
 ##########################################
 #
 # INTERLOCK KNOWBOT (KNOWLEDGEBASE) DISCORD BOT
-# discuss.py
+# bot.py
 #
 ##########################################
 # contributors:
@@ -485,7 +486,6 @@ async def cat_discuss(message):
         querydata = requests.post(url=url, json=json_ls, headers=headers)
     except:
         await message.reply('I couldn\'t get the discussions you requested from the repository.')
-        print('chirp')
         return
 
     # parse returned discussions json
@@ -500,8 +500,6 @@ async def cat_discuss(message):
             body = discussion['body']
             discussion_title = discussion['title']
             discussion_url = discussion['url']
-            print(discussion_title)
-            print(discussion_url)
 
     # new ls graphql query with cursor
     ls = """

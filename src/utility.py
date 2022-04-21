@@ -1,9 +1,10 @@
 # This is free-as-in-freedom software,
 # protected by the GNU General Public License v3.0
+# license copyright (C) of the Free Software Foundation
 ##########################################
 #
 # INTERLOCK KNOWBOT (KNOWLEDGEBASE) DISCORD BOT
-# utility.py
+# bot.py
 #
 ##########################################
 # contributors:
