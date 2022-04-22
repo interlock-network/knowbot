@@ -51,6 +51,9 @@ repo = utility.repo
 
 async def grep_all(message):
 
+    # let user know it may take a minute
+    await message.reply('Stand by...`grep` can take a while.')
+
     # get keyphrase, define title, init files list
     resultlines: list = []
     keyphrase = message.content.lower().replace(f'{repo} grep ', '').replace(' *', '')
@@ -100,6 +103,9 @@ async def grep_all(message):
 ##########################################
 
 async def grep_directory(message):
+
+    # let user know it may take a minute
+    await message.reply('Stand by...`grep` can take a while.')
 
     # get keyphrase, define title, init files list
     resultlines: list = []
@@ -186,6 +192,9 @@ async def ls_grep(message):
 ##########################################
 
 async def ls_directory_grep(message):
+
+    # let user know it may take a minute
+    await message.reply('Stand by...`grep` can take a while.')
 
     # get keyphrase, get directory, define title, init files list
     files: list = []

@@ -137,7 +137,7 @@ async def on_message(message):
 
     # check for ls command to grep all contents list
     # pipe grep directories ls from specific directory
-    if message.content.lower().startswith(f'{repo} ls * | grep '):
+    elif message.content.lower().startswith(f'{repo} ls * | grep '):
         await command.ls_grep(message)
 
     # check for grep command to grep all contents
