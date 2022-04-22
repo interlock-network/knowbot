@@ -106,13 +106,18 @@ async def on_message(message):
     elif (message.content.lower() == f'{repo} ls'):
         await command.ls(message)
 
-    # manpage help
+    # display ls help
     elif (message.content.lower() == f'{repo} ls help'):
         await manpage.ls_help(message)
 
-    # display interrogative help
+    # display ls help
     elif (message.content.lower().startswith(f'{repo} ls help ')):
         await command.ls_help(message)
+
+    # display grep help
+    elif (message.content.lower() == f'{repo} grep help' or
+        message.content.lower() == f'{repo} grep help '):
+        await manpage.grep_help(message)
 
     # list all discussions
     elif (message.content.lower() == f'{repo} ls discuss'):

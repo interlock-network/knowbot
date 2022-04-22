@@ -69,6 +69,50 @@ Display README from the 'how' directory:
     return
 
 ##########################################
+# grep help
+##########################################
+
+async def grep_help(message):
+    output = f"""
+__DESCRIPTION__
+The grpe utility searches for a keyphrase in file names or directories.
+The following options are available:
+
+__NAME__
+**{repo} grep <keyphrase> ***
+_search all file contents in all directories for keyphrase_
+
+**{repo} grep <keyphrase> <directory>**
+_search all file contents for keyphrase in a specific directory_
+
+**{repo} ls * | grep <keyphrase>**
+_search all file names for keyphrase in all directories_
+
+**{repo} ls <directory> | grep <keyphrase>**
+_search file names for keyphrase in specific directory_
+
+__EXAMPLES__
+Search the entire repository for the term _interlock_:
+**{repo} grep interlock ***
+
+Search the entire _what_ directory for the keyphrase _sybil_:
+**{repo} grep sybil what**
+
+Search all file names for the keyphrase _INTR_:
+**{repo} ls * | grep INTR**
+
+Search all file names in the _what_ directory for the keyphrase _proof_:
+**{repo} ls what | grep proof**
+"""
+
+    embed = discord.Embed(
+        title = f"{repo.upper()} GREP    General Help",
+        description = output,
+    )
+    await message.reply(embed=embed)
+    return
+
+##########################################
 # display cat help man page
 ##########################################
 
