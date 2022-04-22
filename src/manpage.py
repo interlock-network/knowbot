@@ -30,63 +30,39 @@ import utility
 repo = utility.repo
 
 ##########################################
-# ls list options
-##########################################
-
-async def ls_list(message):
-    output = f"""
-CHOOSE A DIRECTORY LIKE SO
-    {repo} ls how-many
-    {repo} ls how
-    {repo} ls what-kind-of
-    {repo} ls what
-    {repo} ls when
-    {repo} ls where
-    {repo} ls which
-    {repo} ls whither
-    {repo} ls who
-    {repo} ls whose
-    {repo} ls why
-    {repo} ls help
-"""
-    embed = discord.Embed(
-        title = f"{repo.upper()} LS",
-        description = output,
-    )
-    await message.reply(embed=embed)
-
-    return
-
-##########################################
 # ls help
 ##########################################
 
 async def ls_help(message):
     output = f"""
-NAME
-    {repo} ls - list directory contents
+__DESCRIPTION__
+The ls utility lists the names of files in the specified directory.
+The following options are available:
 
-SYNOPSIS
-    {repo} ls [help] [how-many, how, what-kind-of, what, when, where, which, whither, who, whose, why]
+__NAME__
+**{repo} ls**
+_list repo home contents_
 
-DESCRIPTION
-    The ls utility displays the names of files in the specified directory.
-    The following options are available:
+Take a directory listed in the result from {repo} ls,
+**{repo} ls <directory>**
+_list contents of directory_
 
-    help    Display README of specified directory.
+Display README of specified directory.
+**{repo} ls help <directory>**
 
-EXAMPLES
-    List the contents of the 'what' category:
-        {repo} ls what
+__EXAMPLES__
+List the contents of the 'what' directory:
+**{repo} ls what**
 
-    List the contents of the 'why' category:
-        {repo} ls why
+List the contents of the 'why' directory:
+**{repo} ls why**
 
-    Display a description of the 'how' category:
-        {repo} ls help how
+Display README from the 'how' directory:
+**{repo} ls help how**
 """
+
     embed = discord.Embed(
-        title = f"{repo.upper()} LS    General Commands Manual",
+        title = f"{repo.upper()} LS    General Help",
         description = output,
     )
     await message.reply(embed=embed)

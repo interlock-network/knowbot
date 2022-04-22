@@ -310,7 +310,7 @@ async def ls_directory(message):
 async def ls_help(message):
 
     # define title and get filename
-    directory = message.content.lower().strip(f'{repo} ls help ')
+    directory = message.content.lower().replace(f'{repo} ls help ', '')
     title = f'{repo} ls help \'{directory}\' '
 
     # get file contents and return error if no file or directory exists
