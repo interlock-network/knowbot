@@ -106,10 +106,6 @@ async def on_message(message):
     elif (message.content == f'{repo} ls'):
         await command.ls(message)
 
-    # print list of directory options
-    elif (message.content == f'{repo} ls '):
-        await manpage.ls_list(message)
-
     # manpage help
     elif (message.content == f'{repo} ls help'):
         await manpage.ls_help(message)
