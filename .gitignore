@@ -71,5 +71,6 @@ venv.bak/
 # misc
 ~\$*
 *.swp
+*.swo
 .vscode/*
 .DS_STORE

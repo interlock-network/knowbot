@@ -182,7 +182,7 @@ async def ls_discuss(message, keyphrase, reply):
 async def ls_discuss_grep(message):
 
     # define title, and discussions list
-    keyphrase = message.content.replace(f'{repo} ls discuss | grep ', '')
+    keyphrase = message.content.lower().replace(f'{repo} ls discuss | grep ', '')
     title = f'{repo} ls discuss | grep \'{keyphrase}\''
     discussions = []
     
@@ -306,9 +306,9 @@ async def grep_discuss(message, keyphrase, reply):
     # get keyphrase, define title, init files list
     resultlines: list = []
     if reply:
-        keyphrase = message.content.replace(f'{repo} grep ', '').replace(' discuss', '')
+        keyphrase = message.content.lower().replace(f'{repo} grep ', '').replace(' discuss', '')
     else:
-        keyphrase = message.content.replace(f'{repo} grep ', '').replace(' *', '')
+        keyphrase = message.content.lower().replace(f'{repo} grep ', '').replace(' *', '')
     title = f'{repo} grep \'{keyphrase}\' discuss '
 
     
@@ -440,7 +440,7 @@ async def cat_discuss(message):
 
     # get keyphrase, define title, init files list
     resultlines: list = []
-    keyphrase = message.content.replace(f'{repo} cat discuss/', '')
+    keyphrase = message.content.lower().replace(f'{repo} cat discuss/', '')
     title = f'{repo} cat \'discuss/{keyphrase}\' '
     body = []
     lines: list = []

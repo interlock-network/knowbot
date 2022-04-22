@@ -53,7 +53,7 @@ async def grep_all(message):
 
     # get keyphrase, define title, init files list
     resultlines: list = []
-    keyphrase = message.content.replace(f'{repo} grep ', '').replace(' *', '')
+    keyphrase = message.content.lower().replace(f'{repo} grep ', '').replace(' *', '')
     title = f'{repo} grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
@@ -103,7 +103,7 @@ async def grep_directory(message):
 
     # get keyphrase, define title, init files list
     resultlines: list = []
-    keyphrase = message.content.replace(f'{repo} grep ', '').replace(message.content.split()[-1], '').strip()
+    keyphrase = message.content.lower().replace(f'{repo} grep ', '').replace(message.content.split()[-1], '').strip()
     directory = message.content.split()[-1]
     title = f'{repo} grep \'{keyphrase}\' \'{directory}\''
 
@@ -150,7 +150,7 @@ async def ls_grep(message):
 
     # get keyphrase, define title, init files list
     files: list = []
-    keyphrase = message.content.replace(f'{repo} ls * | grep ', '')
+    keyphrase = message.content.lower().replace(f'{repo} ls * | grep ', '')
     title = f'{repo} ls * | grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
@@ -189,7 +189,7 @@ async def ls_directory_grep(message):
 
     # get keyphrase, get directory, define title, init files list
     files: list = []
-    directory, delimit, keyphrase = message.content.replace(f'{repo} ls ', '').partition(' | grep ')
+    directory, delimit, keyphrase = message.content.lower().replace(f'{repo} ls ', '').partition(' | grep ')
     title = f'{repo} ls \'{directory}\' | grep \'{keyphrase}\' '
 
     # get file contents and return error if no file or directory exists
@@ -282,7 +282,7 @@ async def ls_directory(message):
 
     # get directory, define title, init files list
     files: list = []
-    directory = message.content.replace(f'{repo} ls ', '')
+    directory = message.content.lower().replace(f'{repo} ls ', '')
     title = f'{repo} ls \'{directory}\' '
     
     # get file contents and return error if no file or directory exists
@@ -310,7 +310,7 @@ async def ls_directory(message):
 async def ls_help(message):
 
     # define title and get filename
-    directory = message.content.strip(f'{repo} ls help ')
+    directory = message.content.lower().strip(f'{repo} ls help ')
     title = f'{repo} ls help \'{directory}\' '
 
     # get file contents and return error if no file or directory exists
@@ -344,7 +344,7 @@ async def ls_help(message):
 async def cat(message):
 
     # define title and get filename
-    filename = message.content.strip(f'{repo} cat ')
+    filename = message.content.lower().strip(f'{repo} cat ')
     title = f'{repo} cat \'{filename}\' '
 
     # get file contents and return error if no file or directory exists
