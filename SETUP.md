@@ -6,7 +6,7 @@ For now, undetailed steps go like so:
 
 2. change variables in `utility.py` to match org and target repo
 
-3. create `.env` file in `src` containg `DISCORD_TOKEN`, `DISCORD_SERVER`, and `GITHUB_TOKEN`
+3. create `.env` file in `src` containing `DISCORD_TOKEN`, `DISCORD_SERVER`, and `GITHUB_TOKEN`
 
 4. setup discord bot and get token
 

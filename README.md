@@ -48,15 +48,35 @@ Here are some screenshots illustrating various commands and some examples of kno
 
 ### Some snapshots of the first release looks like this:
 
+_This knowbot is connected to the Interlock internal knowledgebase._
+
+_command:_ `knowbot` (initial help page)
+
 ![](./REPOSTUFF/readme1.png)
+
+_command:_ `knowbot commands` (list of commands)
 
 ![](./REPOSTUFF/readme2.png)
 
+_command:_ `kb examples` (commands with example usage)
+
 ![](./REPOSTUFF/readme3.png)
+
+_command:_ `kb cat discuss/63` (print discussion #63)
 
 ![](./REPOSTUFF/readme4.png)
 
+_command:_ `kb grep nick who` (search for 'nick' in the 'who' directory)
+
 ![](./REPOSTUFF/readme5.png)
+
+_command:_ `kb ls` (list all home directories)
+
+![](./REPOSTUFF/readme6.png)
+
+_command:_ `kb ls how` (list all files in the 'how' directory)
+
+![](./REPOSTUFF/readme7.png)
 
 
 ### Dependencies:
