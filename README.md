@@ -1,54 +1,70 @@
 
-# Knowledgebase Bot (knowbot)
+# Knowledgebase Discord Bot (knowbot)
 
-This repository contains code for the Interlock knowledgebase Discord bot. The concept was spawned from the interlock-kb [issue #46](https://github.com/interlock-network/interlock-kb/issues/46). So far, the intended design includes the following aspects:
+This repository contains code for the Interlock knowledgebase Discord bot, or **_knowbot_** for short. The concept was spawned from an interlock-kb issue, transferred to a discussion in this repository for records' sake: [Original Knowbot Issue #32](https://github.com/interlock-network/knowbot/discussions/32). We basically wanted a way to easily access our organization's knowledgebase from Discord, which is our team's primary communication tool.
+
+##### In short form, the Knowbot is intended to emulate/mimic the classic Unix-style bash terminal (a tool that computer geeks and hackers love) within Discord. A terminal is an interface (screen and a keyboard) that lets you interact with a computer. The knowbot Discord terminal, instead of connecting to a filesystem on a computer, connects to the filesystem within a _Github repository_. The purpose of a Knowbot is to connect to and explore a knowledge base repository with the following flat directory structure:
 
 ```
-~~ Preliminary design doc ~~
-
-The temptation is to mirror bash, quite painfully so,
-using flags to specify correlatives / else. IE:
-
-kb find <name>   -> return list of all matching files in kb
-kb find who <name>   -> return list of all matching who files
-kb find what <name>   -> ...
-
-kb cat <what/filename.md>   -> return contents of _filename.md_ from _what_
-
-kb ls   -> return list of all correlatives
-kb ls who   -> return "who" correlative files
-kb ls what   -> ...
-kb ls | grep <string>   -> return all .md files with string in name
-kb ls what | grep <string>   -> return all .md files from _what_ with string in name
-
-kb grep <string>   -> return all instances of string
-kb grep who <string>   -> return all instances of string in "who"
-kb grep what <string>   -> ...
-
-kb help   -> return basically a simple man page
-kb <command> help   -> return help for specific command
+knowledgebase-repo
 .
-.
-.
-etc
+├── README.md
+├── directory1
+│   ├── README.md
+│   ├── topic1.md
+│   ├── topic2.md
+│   └── topic3.md
+|	...
+├── directory2
+│   ├── README.md
+│   ├── entry1.md
+│   ├── entry2.md
+│   └── entry3.md
+|	...
+├── directory3
+│   ├── README.md
+│   ├── etc1.md
+│   ├── etc2.md
+│   ├── etc3.md
+│   └── etc4.md
+|	...
+├── homefile1.md
+└── homefile2.md
+    ...
 ```
-```
-INCLUDE THIS FUNCTIONALITY:
-knowbot scoops up tagged tidbits from RT discord chat
-and shoves them onto relevant discussion thread.
-```
-## Dependencies:
+In short time, Interlock will provide a public instance of knowbot for community members to tinker with on our Interlock server. For now we are tinkering in a private channel, but the bot is available for anybody to clone/fork and do what they wish.
 
-- Python 3.8
-- Discord.py
-- PyGithub
+Developing, we determined that 'kb' command prefix  must be reconfigurable, with the eventual goal of linking a single knowbot to multiple repositories within an organization.
 
-## Setup:
+Check issues for allll the juicy issues.
 
-A detailed overview for setup is [found here](https://realpython.com/how-to-make-a-discord-bot-python/).
+Feel free to start a discussion.
 
-Otherwise, the order of operations goes like so:
+In the near future, we will be incentivizing contribution with INTR token.
 
-1. Get Discord acount.
-2. Create Discord application to get token which you will paste [here]().
-3. Build and deploy the kb-bot to your particular server.
+We will also be implementing INTR token utilities within knowbot.
+
+Here are some screenshots illustrating various commands and some examples of knowbot in its current form.
+
+### Some snapshots of the first release looks like this:
+
+![](./REPOSTUFF/readme1.png)
+
+![](./REPOSTUFF/readme2.png)
+
+![](./REPOSTUFF/readme3.png)
+
+![](./REPOSTUFF/readme4.png)
+
+![](./REPOSTUFF/readme5.png)
+
+
+### Dependencies:
+
+[Please see references for project and dependencies here.](./REFERENCES.md)
+
+### Setup:
+
+[A nondetailed overview for setup is here.](./SETUP.md).
+
+

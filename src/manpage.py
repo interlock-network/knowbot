@@ -75,7 +75,7 @@ Display README from the 'how' directory:
 async def grep_help(message):
     output = f"""
 __DESCRIPTION__
-The grpe utility searches for a keyphrase in file names or directories.
+The grep utility searches for a keyphrase in file names or directories.
 The following options are available:
 
 __NAME__
@@ -182,7 +182,7 @@ This knowbot is configured to work with the **{utility.repository}** reposistory
 Commands:
 
 list all directories in home
-**{repo} ls**
+**{repo} ls** _(el-es)_
 list all contents of all directories in home
 **{repo} ls ***
 list all contents in specified directory
@@ -198,7 +198,7 @@ pipe list all directory contents to search for searchphrase
 pipe list contents of specific directory to search for searchphrase
 **{repo} ls <directory> | grep <searchphrase>**
 
-Enter **knowbot examples** or **{repo} examples** for example usage.
+Enter **knowbot examples** or **{repo} examples** for expanded examples.
 
 """
 
@@ -217,12 +217,12 @@ async def example(message):
 
     output = f"""
 Here are use-case examples for each command:
+_This is basically a little introduction to BASH terminal_
 
 **list all directories in home**
 **{repo} ls**
 
 _{repo} ls_
-... self explanatory
 ... **ls** stands for _**l**i**s**t_
 
 **list all contents of all directories in home**
@@ -260,7 +260,8 @@ _{repo} grep racecar coolproject_
 _{repo} cat README.md_
 ... prints the README file for the {utility.repository} repository
 ... **cat** stands for _print and con**cat**onate files_
-... I wouldn't worry about concatonation right now
+... but knowbot won't be doing any concatonation, just printing
+
 _{repo} cat coolproject/formula-one.md_
 ... prints _formula-one.md_ file we found in _coolproject_ directory after using **grep**
 !!! to **cat** a listed _discussion_ use _discuss/number_, NOT discussion title
