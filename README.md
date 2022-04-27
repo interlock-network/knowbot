@@ -1,5 +1,3 @@
-<!-- @format -->
-
 # Knowledgebase Discord Bot (Knowbot)
 
 This is the repository for the Interlock knowledgebase Discord bot, or **_Knowbot_** for short. The idea came from an earlier issue that we have since transferred to a discussion in this repo for transparency: [Original Knowbot issue #32](https://github.com/interlock-network/knowbot/discussions/32). Basically, we wanted a way to access our organization's knowledgebase from Discord, which is our team's primary communication tool.
