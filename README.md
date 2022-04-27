@@ -1,9 +1,10 @@
+<!-- @format -->
 
-# Knowledgebase Discord Bot (knowbot)
+# Knowledgebase Discord Bot (Knowbot)
 
-This repository contains code for the Interlock knowledgebase Discord bot, or **_knowbot_** for short. The concept was spawned from an interlock-kb issue, transferred to a discussion in this repository for records' sake: [Original Knowbot Issue #32](https://github.com/interlock-network/knowbot/discussions/32). We basically wanted a way to easily access our organization's knowledgebase from Discord, which is our team's primary communication tool.
+This is the repository for the Interlock knowledgebase Discord bot, or **_Knowbot_** for short. The idea came from an earlier issue that we have since transferred to a discussion in this repo for transparency: [Original Knowbot issue #32](https://github.com/interlock-network/knowbot/discussions/32). Basically, we wanted a way to access our organization's knowledgebase from Discord, which is our team's primary communication tool.
 
-#### In short form, the Knowbot is intended to emulate/mimic the classic Linux-style bash terminal (a tool that computer geeks and hackers love) within Discord. A terminal is an interface (screen and a keyboard) that lets you interact with a computer. The knowbot Discord terminal, instead of connecting to a filesystem on a computer, connects to the filesystem within a _Github repository_. The purpose of a Knowbot is to connect to and explore a knowledge base repository with the following flat directory structure:
+Knowbot mimics the Linux-style bash terminal within Discord. Power users use the terminal by default to access their files. When you use Knowbot, instead of accessing the filesystem on your computer, you connect to the filesystem within a _Github repository_. Knowbot lets you connect to and explore a knowledge base repo with the following flat directory structure:
 
 ```
 knowledgebase-repo
@@ -32,33 +33,36 @@ knowledgebase-repo
 └── homefile2.md
     ...
 ```
-In short time, Interlock will provide a public instance of knowbot for community members to tinker with on our Interlock server. For now we are tinkering in a private channel, but the bot is available for anybody to clone/fork and do what they wish.
 
-Developing, we determined that 'kb' command prefix (see below) must be reconfigurable, with the eventual goal of linking a single knowbot to multiple repositories within an organization.
+Interlock will soon provide a public instance of Knowbot for community members to tinker with on our [Interlock Discord server](https://bit.ly/intldiscord). For now we are tinkering in a private channel, but the bot is available for anybody to clone/fork and do what they wish.
 
-Check issues for allll the juicy issues.
+Developing, we determined that `kb` command prefix (see below) must be reconfigurable, with the eventual goal of linking a single Knowbot to multiple repositories within an organization.
 
-Feel free to start a discussion.
+Look at our [issues](https://github.com/interlock-network/knowbot/issues) to see what we're working on.
 
-In the near future, we will be incentivizing contribution with INTR token.
+Check out our [discussions](https://github.com/interlock-network/knowbot/discussions) to see what we're talking about -- and feel free to start a new discussion!
 
-We will also be implementing INTR token utilities within knowbot.
+In the near future, we will be incentivizing contribution to the Interlock codebase with \$INTR token. We will also be implementing \$INTR token utilities within Knowbot.
 
-Here are some screenshots illustrating various commands and some examples of knowbot in its current form.
+### Some snapshots of the first Knowbot release:
 
-### Some snapshots of the first release looks like this:
+_This Knowbot is connected to the Interlock internal knowledgebase._
 
-_This knowbot is connected to the Interlock internal knowledgebase._
+##### Initial Help Page
 
-_command:_ `knowbot` (initial help page)
+_command:_ `knowbot`
 
 ![](./REPOSTUFF/readme1.png)
 
-_command:_ `knowbot commands` (list of commands)
+##### List Commands
+
+_command:_ `knowbot commands`
 
 ![](./REPOSTUFF/readme2.png)
 
-_command:_ `kb examples` (commands with example usage)
+##### Examples of Commands
+
+_command:_ `kb examples`
 
 ![](./REPOSTUFF/readme3.png)
 
@@ -78,13 +82,10 @@ _command:_ `kb ls how` (list all files in the 'how' directory)
 
 ![](./REPOSTUFF/readme7.png)
 
-
 ### Dependencies:
 
 [Please see references for project and dependencies here.](./REFERENCES.md)
 
 ### Setup:
 
-[A nondetailed overview for setup is here.](./SETUP.md).
-
-
+[A nondetailed overview for setup is here.](./SETUP.md)
