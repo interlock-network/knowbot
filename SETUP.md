@@ -1,6 +1,8 @@
-A detailed setup guide goes here.
+<!-- @format -->
 
-For now, undetailed steps go like so:
+A detailed setup guide will eventually go here.
+
+For now, these are the undetailed steps:
 
 1. clone repo
 
